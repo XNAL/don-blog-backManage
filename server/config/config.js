@@ -10,7 +10,7 @@ module.exports = {
             connectionLimit:10
         }
 	},
-    root: path.normalize(__dirname + '/../../..'),
+    root: path.normalize(__dirname + '/..'),
     appPath:"src",
 	port: 9000
 };

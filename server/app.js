@@ -7,6 +7,7 @@ const path = require('path');
 
 app.use(async(ctx, next) => {
   ctx.execSql = query;
+  ctx.set('Access-Control-Allow-Origin', 'http://localhost:3000');
   await next();
 });
 
