@@ -84,15 +84,36 @@ exports.getArchive = async(ctx) => {
     	tagSql = `  SELECT tag.id, tag.name, COUNT(post.id) AS count FROM tag 
                     LEFT JOIN post_tag ON tag.id = post_tag.tagId
                     LEFT JOIN post ON post_tag.postId = post.id AND post.status = 'PUBLISHED'
-                    GROUP BY tag.id`;
+                    GROUP BY tag.id`,
+      timeSql = ` SELECT DATE_FORMAT(createTime,'%Y-%m') AS yearMonth, id, title 
+                    FROM post ORDER BY createTime DESC`;
   try {
     let catResults = await ctx.execSql(catSql);
     let tagResults = await ctx.execSql(tagSql);
+    let timeResults = await ctx.execSql(timeSql);
+    let timePosts = new Map();
+    for(let post of Object.values(timeResults)) {
+      if(timePosts.has(post.yearMonth)) {
+        let tempArray = timePosts.get(post.yearMonth);
+        tempArray.push({
+          id: post.id,
+          title: post.title
+        });
+        timePosts.set(post.yearMonth, tempArray);
+      } else {
+        timePosts.set(post.yearMonth, new Array({
+          id: post.id,
+          title: post.title
+        }));
+      }
+    }
+
     ctx.body = {
       success: 1,
       message: '',
       categories: catResults.length > 0 ? catResults : [],
-      tags: tagResults.length > 0 ? tagResults : []
+      tags: tagResults.length > 0 ? tagResults : [],
+      times: timePosts.size > 0 ? [...timePosts]: []
     };
   } catch (error) {
     console.log(error);
