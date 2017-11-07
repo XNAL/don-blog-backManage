@@ -85,7 +85,8 @@ exports.getArchive = async(ctx) => {
                     LEFT JOIN post_tag ON tag.id = post_tag.tagId
                     LEFT JOIN post ON post_tag.postId = post.id AND post.status = 'PUBLISHED'
                     GROUP BY tag.id`,
-      timeSql = ` SELECT DATE_FORMAT(createTime,'%Y-%m') AS yearMonth, id, title 
+      timeSql = ` SELECT DATE_FORMAT(createTime,'%Y年%m月') AS yearMonth, id, title, 
+                    DATE_FORMAT(createTime,'%Y-%m-%d') AS createTime
                     FROM post ORDER BY createTime DESC`;
   try {
     let catResults = await ctx.execSql(catSql);
@@ -97,13 +98,15 @@ exports.getArchive = async(ctx) => {
         let tempArray = timePosts.get(post.yearMonth);
         tempArray.push({
           id: post.id,
-          title: post.title
+          title: post.title,
+          createTime: post.createTime
         });
         timePosts.set(post.yearMonth, tempArray);
       } else {
         timePosts.set(post.yearMonth, new Array({
           id: post.id,
-          title: post.title
+          title: post.title,
+          createTime: post.createTime
         }));
       }
     }
@@ -120,6 +123,97 @@ exports.getArchive = async(ctx) => {
     ctx.body = {
       success: 0,
       message: '查询数据出错'
+    };
+  }
+}
+
+exports.getPostsByCatId = async(ctx) => {  
+  let id = ctx.params.id || 0,
+      page = ctx.query.page || 1,
+      pageNum = ctx.query.pageNum || 10,
+      pageIndex = (page - 1) * pageNum < 0 ? 0 : (page - 1) * pageNum,
+      sql = ` SELECT post.id, post.title, SUBSTRING_INDEX(post.content, '<!-- more -->', 1) AS content, 
+              post.poster, post.createTime, post.categoryId, category.name AS categoryName 
+              FROM post LEFT JOIN category ON post.categoryId = category.id 
+              WHERE post.status = 'PUBLISHED' AND post.categoryId = ${id}
+              ORDER BY post.createTime DESC LIMIT ${pageIndex}, ${pageNum}`;
+  try {
+    let category = await ctx.execSql(`SELECT name FROM category WHERE id = ${id}`);
+    let results = await ctx.execSql(sql);
+    ctx.body = {
+      success: 1,
+      message: '',
+      name: category.length > 0 ? category[0].name : '',
+      posts: results
+    };
+  } catch (error) {
+    console.log(error);
+    ctx.body = {
+      success: 0,
+      message: '查询数据出错',
+      posts: null
+    };
+  }
+}
+
+exports.getPostsByTagId = async(ctx) => {  
+  let id = ctx.params.id || 0,
+      page = ctx.query.page || 1,
+      pageNum = ctx.query.pageNum || 10,
+      pageIndex = (page - 1) * pageNum < 0 ? 0 : (page - 1) * pageNum,
+      sql = ` SELECT post.id, post.title, SUBSTRING_INDEX(post.content, '<!-- more -->', 1) AS content, 
+              post.poster, post.createTime, post.categoryId, category.name AS categoryName 
+              FROM post LEFT JOIN category ON post.categoryId = category.id 
+              LEFT JOIN post_tag ON post.id = post_tag.postId
+              WHERE post.status = 'PUBLISHED' AND post_tag.tagId = ${id}
+              ORDER BY post.createTime DESC LIMIT ${pageIndex}, ${pageNum}`;
+  try {
+    let tag = await ctx.execSql(`SELECT name FROM tag WHERE id = ${id}`);
+    let results = await ctx.execSql(sql);
+    ctx.body = {
+      success: 1,
+      message: '',
+      name: tag.length > 0 ? tag[0].name : '',
+      posts: results
+    };
+  } catch (error) {
+    console.log(error);
+    ctx.body = {
+      success: 0,
+      message: '查询数据出错',
+      posts: null
+    };
+  }
+}
+
+exports.getPostsByKeyword = async(ctx) => {
+  let keyword = ctx.params.keyword || '',
+      page = ctx.query.page || 1,
+      pageNum = ctx.query.pageNum || 10,
+      pageIndex = (page - 1) * pageNum < 0 ? 0 : (page - 1) * pageNum,
+      sql = ` SELECT id, title, content, poster, createTime, categoryId, categoryName FROM (
+                SELECT post.id, post.title, SUBSTRING_INDEX(post.content, '<!-- more -->', 1) AS content, 
+                post.poster, post.createTime, post.categoryId, category.name AS categoryName 
+                FROM post LEFT JOIN category ON post.categoryId = category.id 
+                LEFT JOIN post_tag ON post.id = post_tag.postId
+                LEFT JOIN tag ON post_tag.tagId = tag.id 
+                WHERE post.status = 'PUBLISHED' AND ( post.title like '%${keyword}%' OR post.content like '%${keyword}%' 
+                  OR category.name like '%${keyword}%' OR tag.name like '%${keyword}%' )
+              ) AS tab GROUP BY id, title, content, poster, createTime, categoryId, categoryName
+              ORDER BY createTime DESC LIMIT ${pageIndex}, ${pageNum}`;
+  try {
+    let results = await ctx.execSql(sql);
+    ctx.body = {
+      success: 1,
+      message: '',
+      posts: results
+    };
+  } catch (error) {
+    console.log(error);
+    ctx.body = {
+      success: 0,
+      message: '查询数据出错',
+      posts: null
     };
   }
 }
