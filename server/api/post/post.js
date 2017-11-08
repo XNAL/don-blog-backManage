@@ -8,4 +8,6 @@ router.get('/category/:id', controller.getPostsByCatId);
 router.get('/tag/:id', controller.getPostsByTagId);
 router.get('/keyword/:keyword', controller.getPostsByKeyword);
 
+router.get('/getLaboratory', controller.getLaboratory);
+
 module.exports = router;

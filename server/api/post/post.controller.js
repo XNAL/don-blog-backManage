@@ -217,3 +217,21 @@ exports.getPostsByKeyword = async(ctx) => {
     };
   }
 }
+
+exports.getLaboratory = async(ctx) => {
+  try {
+    let results = await ctx.execSql(`SELECT * FROM laboratory ORDER BY createTime DESC`);
+    ctx.body = {
+      success: 1,
+      message: '',
+      posts: results
+    };
+  } catch (error) {
+    console.log(error);
+    ctx.body = {
+      success: 0,
+      message: '查询数据出错',
+      posts: null
+    };
+  }
+}
