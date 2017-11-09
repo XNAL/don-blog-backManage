@@ -1,13 +1,18 @@
 <template>
   <div id="app">
+    <!-- <back-menu></back-menu> -->
     <!-- <img src="./assets/logo.png"> -->
     <router-view/>
   </div>
 </template>
 
 <script>
+import Menu from './components/Menu';
 export default {
-  name: 'app'
+  name: 'app',
+  components: {
+    'back-menu': Menu
+  }
 };
 </script>
 

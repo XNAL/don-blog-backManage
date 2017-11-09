@@ -41,7 +41,10 @@ export default {
       }
 
       let res = await api.login(this.userName, this.password);
-      if (res.data.success === 0) {
+      if (res.data.success === 1) {
+        this.errMsg = '';
+        this.$router.push({ path: '/postlist' });
+      } else {
         this.errMsg = res.data.message;
       }
     }
