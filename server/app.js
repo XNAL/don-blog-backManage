@@ -1,9 +1,16 @@
 const app = require('./config/koa');
 const config = require('./config/config');
-const query = require('./config/mysql-async');
+const query = require('./util/mysql-async');
+const Store = require('./util/redis-store');
+const session = require('koa-session2');
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+
+app.use(session({
+  store: new Store(config.db.redis),
+  ttl: 2*60*60*1000
+}));
 
 app.use(async(ctx, next) => {
   ctx.execSql = query;

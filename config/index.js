@@ -30,8 +30,16 @@ module.exports = {
     port: process.env.PORT || 8080,
     autoOpenBrowser: true,
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
-    proxyTable: {},
+    assetsPublicPath: '/',    
+    proxyTable: {      
+      '/backapi': {
+        target: 'http://localhost:9000',
+        changeOrigin: true,
+        pathRewrite: {                //需要rewrite重写的, 如果在服务器端做了处理则可以不要这段
+          '^/backapi': '/backapi'
+        }   
+      }
+    },
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README
     // (https://github.com/webpack/css-loader#sourcemaps)

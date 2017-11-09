@@ -8,6 +8,15 @@ module.exports = {
             password : '123456',
             database : 'don_blog',
             connectionLimit:10
+        },
+        redis: {
+            port: 6379,
+            host: '127.0.0.1',
+            db: 3,
+            options: {
+                return_buffers: false,
+                auth_pass: ''
+            }
         }
 	},
     root: path.normalize(__dirname + '/..'),

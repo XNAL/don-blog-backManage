@@ -1,0 +1,99 @@
+html {
+  height: 100%;
+}
+body {
+  height: 100%;
+  font-size: $base-font-size;
+  color: #666;
+  background: rgba(238, 238, 238, 0.6);
+}
+
+.container {
+  position: relative;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 80em;
+}
+
+a {
+  position: relative;
+  &:after {
+    content: "";
+    width: 0;
+    height: 1px;
+    background: $base-color;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transition: all .8s;
+  }
+  &:hover {
+    color: $base-color;
+  }
+  &:hover:after {
+    left: 0%;
+    width: 100%;
+  }
+  &.no-underline:hover:after {
+    left: 50%;
+    width: 0;
+  }
+}
+
+//滚动条样式
+::-webkit-scrollbar {
+  width: 3px;
+  height: 6px;
+} /* 这是针对缺省样式 (必须的) */
+::-webkit-scrollbar-track {   
+  background-color:  rgba(230, 230, 230, 0.6);   
+} /* 滚动条的滑轨背景颜色 */
+      
+::-webkit-scrollbar-thumb { 
+  width: 3px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+} /* 滑块颜色 */
+
+::-webkit-scrollbar-button {
+  background-color: rgba(0, 0, 0, 0.2);
+} /* 滑轨两头的监听按钮颜色 */ 
+
+::-webkit-scrollbar-corner {
+  background-color: rgba(0, 0, 0, 0.05);
+} /* 横向滚动条和纵向滚动条相交处尖角的颜色 */
+::-webkit-scrollbar-button{
+  background-color: rgba(0, 0, 0, 0.05);
+}
+::-webkit-scrollbar:horizontal{
+  width: 3px;
+  height:6px;
+}
+
+.scrollX-hidden {
+  overflow-x: hidden;
+}
+
+.scrollY-overlay {
+  overflow-y: hidden !important;
+}
+
+.scrollY-overlay:hover {
+  overflow-y: auto;
+  overflow-y: overlay !important;
+}
+
+.icon {
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+  overflow: hidden;
+}
+
+.fl {
+  float: left;
+}
+
+.fr {
+  float: right;
+}
