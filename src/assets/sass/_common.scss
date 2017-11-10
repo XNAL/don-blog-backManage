@@ -15,6 +15,12 @@ body {
   max-width: 80em;
 }
 
+.right-container {
+  position: relative;
+  margin-left: 12em;
+  padding: 5em 1em 1em;
+}
+
 a {
   position: relative;
   &:after {

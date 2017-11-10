@@ -5,6 +5,9 @@
     </div>
     <ul class="menu-list">
       <li class="menu-item">
+        <router-link to="/" exact class="no-underline">首页</router-link>
+      </li>
+      <li class="menu-item">
         <router-link to="/postlist" exact class="no-underline">文章列表</router-link>
       </li>
       <li class="menu-item">
