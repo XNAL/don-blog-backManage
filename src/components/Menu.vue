@@ -37,6 +37,10 @@
     img {
       width: 100%;
       height: 100%;
+      transition: all .8s;
+      &:hover {
+        transform: scale(1.2) rotate(360deg);
+      }
     }
   }
   .menu-list {
