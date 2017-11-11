@@ -84,7 +84,6 @@ export default {
       padding: 0.8em 1em;
       border: 1px solid #ddd;
       border-radius: 4em;
-      outline: none;
       box-sizing: border-box;
 
       &:focus {

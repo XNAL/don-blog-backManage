@@ -17,5 +17,23 @@ export default {
       page: page,
       pageNum: pageNum
     });
+  },
+  getPostTotal () {
+    return async(`${baseUrl}/getPostTotal`);
+  },
+  offlinePost (id) {
+    return async(`${baseUrl}/offlinePost/${id}`, {}, 'put');
+  },
+  publishPost (id) {
+    return async(`${baseUrl}/publishPost/${id}`, {}, 'put');
+  },
+  getCategories () {
+    return async(`${baseUrl}/getCategories`);
+  },
+  getPostsByCatId (id, page = 1, pageNum = 10) {
+    return async(`${baseUrl}/getPostsByCatId/${id}`, {
+      page: page,
+      pageNum: pageNum
+    });
   }
 };

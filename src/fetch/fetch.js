@@ -73,6 +73,22 @@ export default async (url = '', params = {}, method = 'get') => {
           reject(error);
         });
     });
+  } else if (method === 'put') {
+    return new Promise((resolve, reject) => {
+      axios
+        .put(url, params)
+        .then(
+          response => {
+            resolve(response);
+          },
+          err => {
+            reject(err);
+          }
+        )
+        .catch(error => {
+          reject(error);
+        });
+    });
   } else {
     let error = '传递的参数错误';
     return Promise.reject(error);

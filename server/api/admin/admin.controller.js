@@ -68,3 +68,123 @@ exports.getPostList = async(ctx) => {
     };
   }
 }
+
+exports.getPostTotal = async(ctx) => {
+  try {
+    let results = await ctx.execSql(`SELECT * FROM post`);
+    ctx.body = {
+      success: 1,
+      message: '',
+      total: results.length || 0
+    };
+  } catch (error) {
+    console.log(error);
+    ctx.body = {
+      success: 0,
+      message: '查询数据出错',
+      total: 0
+    };
+  }
+}
+
+exports.offlinePost = async(ctx) => {
+  let id = ctx.params.id || 0;
+  try {
+    let results = await ctx.execSql(`UPDATE post SET status = 'OFFLINE' WHERE id = ${id}`);
+    ctx.body = {
+      success: 1,
+      message: ''
+    };
+  } catch (error) {
+    console.log(error);
+    ctx.body = {
+      success: 0,
+      message: '文章下线出错'
+    };
+  }
+}
+
+exports.publishPost = async(ctx) => {
+  let id = ctx.params.id || 0;
+  try {
+    let results = await ctx.execSql(`UPDATE post SET status = 'PUBLISHED' WHERE id = ${id}`);
+    ctx.body = {
+      success: 1,
+      message: ''
+    };
+  } catch (error) {
+    console.log(error);
+    ctx.body = {
+      success: 0,
+      message: '文章发布出错'
+    };
+  }
+}
+
+exports.getCategories = async(ctx) => {
+  let sql = ` SELECT category.id, category.name, COUNT(post.id) AS count 
+                FROM category LEFT JOIN post ON post.categoryId = category.id 
+                GROUP BY category.id`;
+  try {
+    let results = await ctx.execSql(sql);
+    ctx.body = {
+      success: 1,
+      message: '',
+      categories: results.length > 0 ? results : []
+    };
+  } catch (error) {
+    console.log(error);
+    ctx.body = {
+      success: 0,
+      message: '查询数据出错'
+    };
+  }
+}
+
+exports.getPostsByCatId = async(ctx) => {  
+  let id = ctx.params.id || 0,
+      page = ctx.query.page || 1,
+      pageNum = ctx.query.pageNum || 10,
+      pageIndex = (page - 1) * pageNum < 0 ? 0 : (page - 1) * pageNum,
+      fliter = id == 0 ? '' : ` WHERE post.categoryId = ${id} `
+      sql = ` SELECT post.id, post.title, post.createTime, post.status, post.categoryId, 
+              category.name AS categoryName FROM post LEFT JOIN category 
+              ON post.categoryId = category.id ${fliter}
+              ORDER BY post.createTime DESC LIMIT ${pageIndex}, ${pageNum}`;
+  try {
+    let results = await ctx.execSql(sql);
+    ctx.body = {
+      success: 1,
+      message: '',
+      posts: results
+    };
+  } catch (error) {
+    console.log(error);
+    ctx.body = {
+      success: 0,
+      message: '查询数据出错',
+      posts: null
+    };
+  }
+}
+
+exports.getTags = async(ctx) => {
+  let sql = ` SELECT tag.id, tag.name, COUNT(post.id) AS count FROM tag 
+                LEFT JOIN post_tag ON tag.id = post_tag.tagId
+                LEFT JOIN post ON post_tag.postId = post.id AND post.status = 'PUBLISHED'
+                GROUP BY tag.id`;
+  try {
+    let results = await ctx.execSql(sql);
+    ctx.body = {
+      success: 1,
+      message: '',
+      categories: results.length > 0 ? results : []
+    };
+  } catch (error) {
+    console.log(error);
+    ctx.body = {
+      success: 0,
+      message: '查询数据出错'
+    };
+  }
+}
