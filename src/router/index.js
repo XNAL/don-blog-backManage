@@ -4,6 +4,7 @@ import Home from '@/pages/Home';
 import Login from '@/pages/Login';
 import PostList from '@/pages/PostList';
 import Category from '@/pages/Category';
+import Tag from '@/pages/Tag';
 
 Vue.use(Router);
 
@@ -50,6 +51,21 @@ export default new Router({
         },
         {
           name: '分类管理',
+          link: ''
+        }
+      ]
+    },
+    {
+      path: '/tag',
+      name: 'Tag',
+      component: Tag,
+      meta: [
+        {
+          name: '首页',
+          link: '/'
+        },
+        {
+          name: '标签管理',
           link: ''
         }
       ]

@@ -35,5 +35,14 @@ export default {
       page: page,
       pageNum: pageNum
     });
+  },
+  getTags () {
+    return async(`${baseUrl}/getTags`);
+  },
+  getPostsByTagId (id, page = 1, pageNum = 10) {
+    return async(`${baseUrl}/getPostsByTagId/${id}`, {
+      page: page,
+      pageNum: pageNum
+    });
   }
 };

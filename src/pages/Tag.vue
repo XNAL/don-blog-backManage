@@ -1,20 +1,20 @@
 <template>
-  <section class="category right-container">
+  <section class="tag right-container">
     <back-menu></back-menu>
     <back-header></back-header>  
-    <div class="cat-header">
-      <ul class="cat-list">
-        <li class="cat-item" v-for="cat in catList" :key="cat.id">
-          <button :class="{ active: currentCat.id === cat.id }" 
-                  @click="queryCat(cat)">
-            {{ cat.name}} ({{ cat.count }})
+    <div class="tag-header">
+      <ul class="tag-list">
+        <li class="tag-item" v-for="tag in tagList" :key="tag.id">
+          <button :class="{ active: currentTag.id === tag.id }" 
+                  @click="queryTag(tag)">
+            {{ tag.name}} ({{ tag.count }})
           </button>
         </li>
       </ul>
-      <button class="btn-add" @click="addCategory">
+      <button class="btn-add">
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-add"></use>
-        </svg>添加分类
+        </svg>添加标签
       </button>
     </div>
     <post-table :post-list="postList"></post-table>
@@ -23,7 +23,6 @@
                 :current-page="page" 
                 @change-page="changePage">
     </pagination>
-    <!-- <message-box ref="messageBox"></message-box> -->
   </section>
 </template>
 
@@ -33,7 +32,6 @@ import Menu from '../components/Menu';
 import Header from '../components/Header';
 import PostTable from '../components/PostTable';
 import Pagination from '../components/Pagination';
-// import MessageBox from '../components/MessageBox';
 
 export default {
   components: {
@@ -44,10 +42,10 @@ export default {
   },
   data () {
     return {
-      catList: [],
-      currentCat: {
+      tagList: [],
+      currentTag: {
         id: 0,
-        name: '全部分类',
+        name: '全部标签',
         count: 0
       },
       postList: [],
@@ -57,49 +55,35 @@ export default {
     };
   },
   created () {
-    this.getCategories();
-    this.queryCat(this.currentCat);
+    this.getTags();
+    this.queryTag(this.currentTag);
   },
   methods: {
-    getCategories: async function () {
-      let res = await api.getCategories();
+    getTags: async function () {
+      let res = await api.getTags();
       if (res.data.success === 1) {
-        let categories = res.data.categories;
-        let total = 0;
-        for (let cat of Object.values(categories)) {
-          total += cat.count;
-        }
-        categories.unshift({
+        let tags = res.data.tags;
+        let total = res.data.total;
+        tags.unshift({
           id: 0,
-          name: '全部分类',
+          name: '全部标签',
           count: total
         });
         this.total = total;
-        this.catList = categories;
+        this.tagList = tags;
       }
     },
-    queryCat: async function (cat) {
-      this.currentCat = cat;
-      this.total = cat.count;
-      let res = await api.getPostsByCatId(cat.id, this.page, this.pageSize);
+    queryTag: async function (tag) {
+      this.currentTag = tag;
+      this.total = tag.count;
+      let res = await api.getPostsByTagId(tag.id, this.page, this.pageSize);
       if (res.data.success === 1) {
         this.postList = res.data.posts;
       }
     },
     changePage: function (newPage) {
       this.page = newPage;
-      this.queryCat(this.currentCat);
-    },
-    addCategory: function () {
-      this.$msgBox.showMsgBox({
-        title: '添加分类',
-        content: '请填写分类名称',
-        isShowInput: true
-      }).then((val) => {
-        console.log('confirm', val);
-      }).catch(() => {
-        console.log('cancel');
-      });
+      this.queryTag(this.currentTag);
     }
   }
 };
@@ -107,8 +91,8 @@ export default {
 
 <style lang="scss" scoped>
 @import '../assets/sass/app';
-.category {
-  .cat-header {
+.tag {
+  .tag-header {
     position: relative;
     .btn-add {
       position: absolute;
@@ -134,11 +118,11 @@ export default {
       }
     }
   }
-  .cat-list {
+  .tag-list {
     overflow: hidden;
     margin-right: 6em;
 
-    .cat-item {
+    .tag-item {
       float: left;
 
       button {

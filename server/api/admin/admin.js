@@ -9,5 +9,6 @@ router.put('/publishPost/:id', controller.publishPost);
 router.get('/getCategories', controller.getCategories);
 router.get('/getPostsByCatId/:id', controller.getPostsByCatId);
 router.get('/getTags', controller.getTags);
+router.get('/getPostsByTagId/:id', controller.getPostsByTagId);
 
 module.exports = router;

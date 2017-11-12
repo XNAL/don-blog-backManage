@@ -146,7 +146,7 @@ exports.getPostsByCatId = async(ctx) => {
       page = ctx.query.page || 1,
       pageNum = ctx.query.pageNum || 10,
       pageIndex = (page - 1) * pageNum < 0 ? 0 : (page - 1) * pageNum,
-      fliter = id == 0 ? '' : ` WHERE post.categoryId = ${id} `
+      fliter = id == 0 ? '' : ` WHERE post.categoryId = ${id} `,
       sql = ` SELECT post.id, post.title, post.createTime, post.status, post.categoryId, 
               category.name AS categoryName FROM post LEFT JOIN category 
               ON post.categoryId = category.id ${fliter}
@@ -175,16 +175,49 @@ exports.getTags = async(ctx) => {
                 GROUP BY tag.id`;
   try {
     let results = await ctx.execSql(sql);
+    let totalResult = await ctx.execSql(`SELECT COUNT(*) AS total FROM post`);
     ctx.body = {
       success: 1,
       message: '',
-      categories: results.length > 0 ? results : []
+      tags: results.length > 0 ? results : [],
+      total: totalResult.length > 0 ? totalResult[0].total : 0
     };
   } catch (error) {
     console.log(error);
     ctx.body = {
       success: 0,
       message: '查询数据出错'
+    };
+  }
+}
+
+
+exports.getPostsByTagId = async(ctx) => {  
+  let id = ctx.params.id || 0,
+      page = ctx.query.page || 1,
+      pageNum = ctx.query.pageNum || 10,
+      pageIndex = (page - 1) * pageNum < 0 ? 0 : (page - 1) * pageNum,
+      fliter = id == 0 ? '' : ` WHERE post_tag.tagId = ${id} `,
+      sql = ` SELECT post.id, post.title, post.createTime, post.status, 
+              post.categoryId, category.name AS categoryName 
+              FROM post LEFT JOIN category ON post.categoryId = category.id 
+              LEFT JOIN post_tag ON post.id = post_tag.postId ${fliter}
+              GROUP BY post.id, post.title, post.createTime, post.status, 
+              post.categoryId, category.name
+              ORDER BY post.createTime DESC LIMIT ${pageIndex}, ${pageNum}`;
+  try {
+    let results = await ctx.execSql(sql);
+    ctx.body = {
+      success: 1,
+      message: '',
+      posts: results
+    };
+  } catch (error) {
+    console.log(error);
+    ctx.body = {
+      success: 0,
+      message: '查询数据出错',
+      posts: null
     };
   }
 }
