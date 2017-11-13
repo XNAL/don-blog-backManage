@@ -46,6 +46,38 @@ a {
   }
 }
 
+.btn-default {
+  padding: 0.8em 1.5em;
+  font-size: 1em;
+  color: #555;
+  border: 1px solid #d8dce5;
+  border-radius: 0.2em;
+  cursor: pointer;
+  background-color: #fff;   
+  outline: none;
+
+  &:hover {
+    color: $base-color;
+    border-color: #c6e2ff;
+    background-color: #ecf5ff;
+  }
+}
+
+.btn-primary {
+  padding: 0.8em 1.5em;
+  font-size: 1em;
+  color: #fff;
+  border-radius: 0.2em;
+  cursor: pointer;
+  border: 1px solid $base-color;
+  background-color: $base-color;  
+  outline: none;
+  
+  &:hover {
+    opacity: .8;
+  }
+}
+
 //滚动条样式
 ::-webkit-scrollbar {
   width: 3px;

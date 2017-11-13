@@ -8,8 +8,8 @@
       <input type="text" v-model="inputValue" v-if="isShowInput" ref="input">
     </div>
 		<div class="btn-group">
-			<button class="btn" @click="cancel" v-show="isShowCancelBtn">{{ cancelBtnText }}</button>
-			<button class="btn btn-confirm" @click="confirm" v-show="isShowConfimrBtn">{{ confirmBtnText }}</button>
+			<button class="btn-default" @click="cancel" v-show="isShowCancelBtn">{{ cancelBtnText }}</button>
+			<button class="btn-primary btn-confirm" @click="confirm" v-show="isShowConfimrBtn">{{ confirmBtnText }}</button>
 		</div>
 	</div>
 </div>
@@ -143,24 +143,9 @@ export default {
       margin-top: 1em;
       float: right;
       overflow: hidden;
-      .btn {
+
+      .btn-confirm {
         margin-left: 1em;
-        padding: 0.8em 1.5em;
-        font-size: 0.8em;
-        color: #555;
-        border: 1px solid #d8dce5;
-        border-radius: 0.2em;
-        cursor: pointer;
-        background-color: #fff;
-        &.btn-confirm {
-          color: #fff;
-          border-color: $base-color;
-          background-color: $base-color;
-          
-          &:hover {
-            opacity: .8;
-          }
-        }
       }
     }
   }

@@ -23,6 +23,7 @@
     "koa-router": "^7.2.1",
     "koa-session2": "^2.2.5",
     "koa-static": "^4.0.1",
+    "marked": "^0.3.6",
     "moment": "^2.19.1",
     "mysql": "^2.15.0",
     "node-sass": "^4.6.0",

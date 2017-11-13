@@ -20,10 +20,10 @@
               <td>{{ post.createTime | formatTime }}</td>
               <td>{{ post.status | setStatus }}</td>
               <td>
-                <button class="btn-edit" @click="editPost(post.id)">编辑</button>
-                <button class="btn-offline" @click="offlinePost(post.id, index)" 
+                <button class="btn-default btn-edit" @click="editPost(post.id)">编辑</button>
+                <button class="btn-default btn-offline" @click="offlinePost(post.id, index)" 
                         v-if="post.status === 'PUBLISHED'">下线</button>
-                <button class="btn-publish" @click="publishPost(post.id, index)" v-else>发布</button>
+                <button class="btn-default btn-publish" @click="publishPost(post.id, index)" v-else>发布</button>
               </td>
             </tr>
           </template>
@@ -66,17 +66,35 @@ export default {
     editPost: function (postId) {
       console.log('edit', postId);
     },
-    offlinePost: async function (postId, index) {
-      let res = await api.offlinePost(postId);
-      if (res.data.success === 1) {
-        this.postList[index].status = 'OFFLINE';
-      }
+    offlinePost: function (postId, index) {
+      this.$msgBox.showMsgBox({
+        title: '确认下线',
+        content: '确认是否下线该篇文章？'
+      }).then(async () => {
+        let res = await api.offlinePost(postId);
+        if (res.data.success === 1) {
+          this.postList[index].status = 'OFFLINE';
+        }
+      }).catch(() => {
+        return false;
+      });
     },
     publishPost: async function (postId, index) {
-      let res = await api.publishPost(postId);
-      if (res.data.success === 1) {
-        this.postList[index].status = 'PUBLISHED';
-      }
+      this.$msgBox.showMsgBox({
+        title: '确认发布',
+        content: '确认是否发布该篇文章？'
+      }).then(async () => {
+        let res = await api.publishPost(postId);
+        if (res.data.success === 1) {
+          this.postList[index].status = 'PUBLISHED';
+        }
+      }).catch(() => {
+        return false;
+      });
+      // let res = await api.publishPost(postId);
+      // if (res.data.success === 1) {
+      //   this.postList[index].status = 'PUBLISHED';
+      // }
     }
   }
 };
@@ -104,23 +122,25 @@ export default {
       }
 
       button {
-        padding: 0.3em 1em;
-        background-color: #fff;
-        border: 1px solid #d8dce5;
-        border-radius: 0.2em;
-        cursor: pointer;
+        padding: 0.4em 1em;
 
         &.btn-offline {
           margin-left: 1em;
           background-color: #fa5555;
           color: #fff;
           border-color: #fa5555;
+          &:hover {
+            opacity: .8;
+          }
         }
         &.btn-publish {
           margin-left: 1em;
           background-color: $base-color;
           color: #fff;
           border-color: $base-color;
+          &:hover {
+            opacity: .8;
+          }
         }
       }
     }

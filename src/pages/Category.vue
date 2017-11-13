@@ -5,13 +5,13 @@
     <div class="cat-header">
       <ul class="cat-list">
         <li class="cat-item" v-for="cat in catList" :key="cat.id">
-          <button :class="{ active: currentCat.id === cat.id }" 
+          <button :class="currentCat.id === cat.id ? 'btn-primary' : 'btn-default'" 
                   @click="queryCat(cat)">
             {{ cat.name}} ({{ cat.count }})
           </button>
         </li>
       </ul>
-      <button class="btn-add" @click="addCategory">
+      <button class="btn-default btn-add" @click="addCategory">
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-add"></use>
         </svg>添加分类
@@ -23,7 +23,6 @@
                 :current-page="page" 
                 @change-page="changePage">
     </pagination>
-    <!-- <message-box ref="messageBox"></message-box> -->
   </section>
 </template>
 
@@ -33,7 +32,6 @@ import Menu from '../components/Menu';
 import Header from '../components/Header';
 import PostTable from '../components/PostTable';
 import Pagination from '../components/Pagination';
-// import MessageBox from '../components/MessageBox';
 
 export default {
   components: {
@@ -110,21 +108,13 @@ export default {
 .category {
   .cat-header {
     position: relative;
+    min-height: 3em;
     .btn-add {
       position: absolute;
       top: 0;
       right: 0;
-      padding: 0.4em 0.6em;
-      // background: $base-color;
-      font-size: 1em;
-      // color: #fff;
       color: $base-color;
-      background: #fff;
-      text-align: center;
-      border: 1px solid $base-color;
-      border-radius: 0.2em;
-      box-sizing: border-box;
-      cursor: pointer;
+      border-color: $base-color;
 
       .icon {
         width: 0.9em;
@@ -142,26 +132,7 @@ export default {
       float: left;
 
       button {
-        margin: 0 0.4em 1em;
-        padding: 0.4em;
-        background: #fff;
-        font-size: 1em;
-        color: #666;
-        text-align: center;
-        border: 1px solid #d1dbe5;
-        border-radius: 0.2em;
-        box-sizing: border-box;
-        cursor: pointer;
-        &.active {
-          color: #fff;
-          background: $base-color;
-          border-color: $base-color;
-        }
-        &:hover {
-          color: #fff;
-          background: $base-color;
-          border-color: $base-color;
-        }
+        margin: 0 1em 1em 0;
       }
     }
   }
