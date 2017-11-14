@@ -4,10 +4,14 @@
     <back-header></back-header>  
     <div class="cat-header">
       <ul class="cat-list">
-        <li class="cat-item" v-for="cat in catList" :key="cat.id">
+        <li class="cat-item" v-for="(cat, index) in catList" :key="cat.id">
           <button :class="currentCat.id === cat.id ? 'btn-primary' : 'btn-default'" 
-                  @click="queryCat(cat)">
+                  @click="queryCat(cat)" @dblclick="editCategory(cat, index)">
             {{ cat.name}} ({{ cat.count }})
+            <svg class="icon" aria-hidden="true" v-if="cat.id !== 0" 
+                  @click.stop="deleteCategory(cat, index)">
+              <use xlink:href="#icon-delete"></use>
+            </svg>
           </button>
         </li>
       </ul>
@@ -93,11 +97,57 @@ export default {
         title: '添加分类',
         content: '请填写分类名称',
         isShowInput: true
-      }).then((val) => {
-        console.log('confirm', val);
+      }).then(async (val) => {
+        let res = await api.addNewCategory(val);
+        if (res.data.success === 1) {
+          this.catList.push({
+            id: res.data.newId,
+            name: val,
+            count: 0
+          });
+        }
       }).catch(() => {
         console.log('cancel');
       });
+    },
+    editCategory: function (cat, index) {
+      this.$msgBox.showMsgBox({
+        title: '编辑分类',
+        content: '请填写分类名称',
+        isShowInput: true,
+        inputValue: cat.name
+      }).then(async (val) => {
+        let res = await api.updateCategory(cat.id, val);
+        if (res.data.success === 1) {
+          this.catList[index].name = val;
+        }
+      }).catch(() => {
+        console.log('cancel');
+      });
+    },
+    deleteCategory: function (cat, index) {
+      if (cat.count > 0) {
+        this.$msgBox.showMsgBox({
+          title: '删除提示',
+          content: '当前分类下存在文章，不允许删除该分类！'
+        }).then(async () => {
+          return false;
+        }).catch(() => {
+          return false;
+        });
+      } else {
+        this.$msgBox.showMsgBox({
+          title: '确认删除',
+          content: '确认是否删除该分类？'
+        }).then(async () => {
+          let res = await api.deleteCategory(cat.id);
+          if (res.data.success === 1) {
+            this.catList.splice(index, 1);
+          }
+        }).catch(() => {
+          return false;
+        });
+      }
     }
   }
 };
@@ -132,7 +182,19 @@ export default {
       float: left;
 
       button {
+        position: relative;
         margin: 0 1em 1em 0;
+        padding-right: 2em;
+        .icon {
+          position: absolute;
+          top: 1em;
+          right: 0.2em;
+          width: 0.6em;
+          height: 0.6em;
+          color: red;
+          vertical-align: -0.05em;
+          margin-right: 0.4em;
+        }
       }
     }
   }

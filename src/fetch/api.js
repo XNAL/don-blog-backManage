@@ -36,6 +36,15 @@ export default {
       pageNum: pageNum
     });
   },
+  addNewCategory (name) {
+    return async(`${baseUrl}/addNewCategory/${name}`, {}, 'put');
+  },
+  updateCategory (id, name) {
+    return async(`${baseUrl}/updateCategory/${id}?name=${name}`, {}, 'put');
+  },
+  deleteCategory (id) {
+    return async(`${baseUrl}/deleteCategory/${id}`, {}, 'put');
+  },
   getTags () {
     return async(`${baseUrl}/getTags`);
   },
@@ -44,5 +53,14 @@ export default {
       page: page,
       pageNum: pageNum
     });
+  },
+  addNewTag (name) {
+    return async(`${baseUrl}/addNewTag/${name}`, {}, 'put');
+  },
+  updateTag (id, name) {
+    return async(`${baseUrl}/updateTag/${id}?name=${name}`, {}, 'put');
+  },
+  deleteTag (id) {
+    return async(`${baseUrl}/deleteTag/${id}`, {}, 'put');
   }
 };

@@ -27,6 +27,7 @@ export default {
       default: '这是弹框内容'
     },
     isShowInput: false,
+    inputValue: '',
     isShowCancelBtn: {
       type: Boolean,
       default: true
@@ -47,7 +48,6 @@ export default {
   data () {
     return {
       isShowMessageBox: false,
-      inputValue: '',
       resolve: '',
       reject: '',
       promise: '' // 保存promise对象

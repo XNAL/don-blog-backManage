@@ -4,14 +4,18 @@
     <back-header></back-header>  
     <div class="tag-header">
       <ul class="tag-list">
-        <li class="tag-item" v-for="tag in tagList" :key="tag.id">
+        <li class="tag-item" v-for="(tag, index) in tagList" :key="tag.id">
           <button :class="currentTag.id === tag.id ? 'btn-primary' : 'btn-default'" 
-                  @click="queryTag(tag)">
+                  @click="queryTag(tag)" @dblclick="editTag(tag, index)">
             {{ tag.name}} ({{ tag.count }})
+            <svg class="icon" aria-hidden="true" v-if="tag.id !== 0" 
+                  @click.stop="deleteTag(tag, index)">
+              <use xlink:href="#icon-delete"></use>
+            </svg>
           </button>
         </li>
       </ul>
-      <button class="btn-default btn-add">
+      <button class="btn-default btn-add" @click="addTag">
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-add"></use>
         </svg>添加标签
@@ -84,6 +88,56 @@ export default {
     changePage: function (newPage) {
       this.page = newPage;
       this.queryTag(this.currentTag);
+    },
+    addTag: function () {
+      this.$msgBox.showMsgBox({
+        title: '添加标签',
+        content: '请填写标签名称',
+        isShowInput: true
+      }).then(async (val) => {
+        let res = await api.addNewTag(val);
+        if (res.data.success === 1) {
+          this.tagList.push({
+            id: res.data.newId,
+            name: val,
+            count: 0
+          });
+        }
+      }).catch(() => {
+        console.log('cancel');
+      });
+    },
+    editTag: function (tag, index) {
+      this.$msgBox.showMsgBox({
+        title: '编辑标签',
+        content: '请填写标签名称',
+        isShowInput: true,
+        inputValue: tag.name
+      }).then(async (val) => {
+        let res = await api.updateTag(tag.id, val);
+        if (res.data.success === 1) {
+          this.tagList[index].name = val;
+        }
+      }).catch(() => {
+        console.log('cancel');
+      });
+    },
+    deleteTag: function (tag, index) {
+      let content = '确认是否删除该标签？';
+      if (tag.count > 0) {
+        content = '该标签下的文章不会受到删除的影响，确认是否删除该标签？';
+      }
+      this.$msgBox.showMsgBox({
+        title: '确认删除',
+        content: content
+      }).then(async () => {
+        let res = await api.deleteTag(tag.id);
+        if (res.data.success === 1) {
+          this.tagList.splice(index, 1);
+        }
+      }).catch(() => {
+        return false;
+      });
     }
   }
 };
@@ -117,8 +171,20 @@ export default {
     .tag-item {
       float: left;
 
-      button {        
+      button {
+        position: relative;     
         margin: 0 1em 1em 0;
+        padding-right: 2em;
+        .icon {
+          position: absolute;
+          top: 1em;
+          right: 0.2em;
+          width: 0.6em;
+          height: 0.6em;
+          color: red;
+          vertical-align: -0.05em;
+          margin-right: 0.4em;
+        }
       }
     }
   }
