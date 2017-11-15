@@ -2,6 +2,9 @@
 <div class="message-box" v-show="isShowMessageBox">
 	<div class="mask"></div>
 	<div class="message-content">
+    <svg class="icon" aria-hidden="true" @click="cancel">
+      <use xlink:href="#icon-delete"></use>
+    </svg>
 		<h3 class="title">{{ title }}</h3>
 		<p class="content">{{ content }}</p>
     <div>
@@ -55,7 +58,7 @@ export default {
   },
   methods: {
     // 确定,将promise断定为完成态
-    confirm () {
+    confirm: function () {
       this.isShowMessageBox = false;
       if (this.isShowInput) {
         this.resolve(this.inputValue);
@@ -65,13 +68,13 @@ export default {
       this.remove();
     },
     // 取消,将promise断定为reject状态
-    cancel () {
+    cancel: function () {
       this.isShowMessageBox = false;
       this.reject('cancel');
       this.remove();
     },
     // 弹出messageBox,并创建promise对象，给父组件调用
-    showMsgBox () {
+    showMsgBox: function () {
       this.isShowMessageBox = true;
       this.promise = new Promise((resolve, reject) => {
         this.resolve = resolve;
@@ -80,12 +83,12 @@ export default {
       // 返回promise对象,给父级组件调用
       return this.promise;
     },
-    remove () {
+    remove: function () {
       setTimeout(() => {
         this.destroy();
       }, 300);
     },
-    destroy () {
+    destroy: function () {
       this.$destroy();
       document.body.removeChild(this.$el);
     }
@@ -109,10 +112,22 @@ export default {
     border-radius: 0.4em;
     background: #fff;
     z-index: 50001;
+    .icon {
+      position: absolute;
+      top: 1em;
+      right: 1em;
+      width: 0.9em;
+      height: 0.9em;
+      color: #878d99;
+      cursor: pointer;
+
+      &:hover {
+        color: $base-color;
+      }
+    }
     .title {
       font-size: 1.2em;
       font-weight: 600;
-      // line-height: 2em;
       margin-bottom: 1em;
     }
     .content {

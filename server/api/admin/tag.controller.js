@@ -56,6 +56,14 @@ exports.getPostsByTagId = async(ctx) => {
 exports.addNewTag = async(ctx) => {
   let name = ctx.params.name || 0;
   try {
+    let existName = await ctx.execSql(`SELECT * FROM tag WHERE name = '${name}'`);
+    if (existName.length > 0) {
+      ctx.body = {
+        success: 0,
+        message: '标签名称已存在！'
+      };
+      return false;
+    }
     let results = await ctx.execSql(`INSERT INTO tag SET name = '${name}'`);
     ctx.body = {
       success: 1,
@@ -76,6 +84,14 @@ exports.updateTag = async(ctx) => {
   let id = ctx.params.id || 0,
       name = ctx.query.name || '';
   try {
+    let existName = await ctx.execSql(`SELECT * FROM tag WHERE name = '${name}' AND id <> ${id}`);
+    if (existName.length > 0) {
+      ctx.body = {
+        success: 0,
+        message: '标签名称已存在！'
+      };
+      return false;
+    }
     let results = await ctx.execSql(`UPDATE tag SET name = '${name}' WHERE id = ${id}`);
     ctx.body = {
       success: 1,

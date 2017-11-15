@@ -5,7 +5,9 @@ import App from './App';
 import router from './router';
 
 import MessageBox from './components/MessageBox/index';
+import Message from './components/Message/index';
 Vue.use(MessageBox);
+Vue.use(Message);
 
 Vue.config.productionTip = false;
 

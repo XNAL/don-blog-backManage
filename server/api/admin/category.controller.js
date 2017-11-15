@@ -47,7 +47,15 @@ exports.getPostsByCatId = async(ctx) => {
 
 exports.addNewCategory = async(ctx) => {
   let name = ctx.params.name || 0;
-  try {
+  try {   
+    let existName = await ctx.execSql(`SELECT * FROM category WHERE name = '${name}'`);
+    if (existName.length > 0) {
+      ctx.body = {
+        success: 0,
+        message: '分类名称已存在！'
+      };
+      return false;
+    }
     let results = await ctx.execSql(`INSERT INTO category SET name = '${name}'`);
     ctx.body = {
       success: 1,
@@ -67,7 +75,15 @@ exports.addNewCategory = async(ctx) => {
 exports.updateCategory = async(ctx) => {
   let id = ctx.params.id || 0,
       name = ctx.query.name || '';
-  try {
+  try {    
+    let existName = await ctx.execSql(`SELECT * FROM category WHERE name = '${name}' AND id <> ${id}`);
+    if (existName.length > 0) {
+      ctx.body = {
+        success: 0,
+        message: '分类名称已存在！'
+      };
+      return false;
+    }
     let results = await ctx.execSql(`UPDATE category SET name = '${name}' WHERE id = ${id}`);
     ctx.body = {
       success: 1,
