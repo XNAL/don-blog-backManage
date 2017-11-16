@@ -105,6 +105,15 @@ export default {
             name: val,
             count: 0
           });
+          this.$message.showMessage({
+            type: 'success',
+            content: '添加分类成功'
+          });
+        } else {
+          this.$message.showMessage({
+            type: 'error',
+            content: res.data.message
+          });
         }
       }).catch(() => {
         console.log('cancel');
@@ -120,6 +129,16 @@ export default {
         let res = await api.updateCategory(cat.id, val);
         if (res.data.success === 1) {
           this.catList[index].name = val;
+          this.$message.showMessage({
+            type: 'success',
+            content: '修改分类成功'
+          });
+          this.queryCat(this.catList[index]);
+        } else {
+          this.$message.showMessage({
+            type: 'error',
+            content: res.data.message
+          });
         }
       }).catch(() => {
         console.log('cancel');
@@ -130,7 +149,7 @@ export default {
         this.$msgBox.showMsgBox({
           title: '删除提示',
           content: '当前分类下存在文章，不允许删除该分类！'
-        }).then(async () => {
+        }).then(() => {
           return false;
         }).catch(() => {
           return false;
@@ -143,6 +162,15 @@ export default {
           let res = await api.deleteCategory(cat.id);
           if (res.data.success === 1) {
             this.catList.splice(index, 1);
+            this.$message.showMessage({
+              type: 'success',
+              content: '删除分类成功'
+            });
+          } else {
+            this.$message.showMessage({
+              type: 'error',
+              content: res.data.message
+            });
           }
         }).catch(() => {
           return false;

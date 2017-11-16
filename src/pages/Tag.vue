@@ -102,6 +102,15 @@ export default {
             name: val,
             count: 0
           });
+          this.$message.showMessage({
+            type: 'success',
+            content: '添加标签成功'
+          });
+        } else {
+          this.$message.showMessage({
+            type: 'error',
+            content: res.data.message
+          });
         }
       }).catch(() => {
         console.log('cancel');
@@ -117,6 +126,15 @@ export default {
         let res = await api.updateTag(tag.id, val);
         if (res.data.success === 1) {
           this.tagList[index].name = val;
+          this.$message.showMessage({
+            type: 'success',
+            content: '修改标签成功'
+          });
+        } else {
+          this.$message.showMessage({
+            type: 'error',
+            content: res.data.message
+          });
         }
       }).catch(() => {
         console.log('cancel');
@@ -134,6 +152,15 @@ export default {
         let res = await api.deleteTag(tag.id);
         if (res.data.success === 1) {
           this.tagList.splice(index, 1);
+          this.$message.showMessage({
+            type: 'success',
+            content: '删除标签成功'
+          });
+        } else {
+          this.$message.showMessage({
+            type: 'error',
+            content: res.data.message
+          });
         }
       }).catch(() => {
         return false;

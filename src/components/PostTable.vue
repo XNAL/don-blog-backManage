@@ -74,6 +74,15 @@ export default {
         let res = await api.offlinePost(postId);
         if (res.data.success === 1) {
           this.postList[index].status = 'OFFLINE';
+          this.$message.showMessage({
+            type: 'success',
+            content: '下线文章成功'
+          });
+        } else {
+          this.$message.showMessage({
+            type: 'error',
+            content: res.data.message
+          });
         }
       }).catch(() => {
         return false;
@@ -87,6 +96,15 @@ export default {
         let res = await api.publishPost(postId);
         if (res.data.success === 1) {
           this.postList[index].status = 'PUBLISHED';
+          this.$message.showMessage({
+            type: 'success',
+            content: '发布文章成功'
+          });
+        } else {
+          this.$message.showMessage({
+            type: 'error',
+            content: res.data.message
+          });
         }
       }).catch(() => {
         return false;

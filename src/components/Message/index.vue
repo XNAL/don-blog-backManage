@@ -1,7 +1,12 @@
 <template>
   <transition name="fade">
-    <section :class="['message', `message-${types.includes(type) ? type : 'info'}` ]" v-if="isShowMessage">
-      <p class="content">{{ content }}</p>
+    <section :class="['message', `message-${types.includes(type) ? type : 'info'}` ]" 
+              v-if="isShowMessage" @mouseover="mouseOver" @mouseleave="mouseLeave">
+      <p class="content">
+        <svg class="icon" aria-hidden="true">
+          <use :xlink:href="`#icon-${types.includes(type) ? type : 'info'}`"></use>
+        </svg>{{ content }}
+      </p>
     </section>
   </transition>
 </template>
@@ -14,17 +19,14 @@ export default {
       content: '提示内容',
       duration: 2000,
       type: '',
-      types: ['success', 'warning', 'info', 'error']
+      types: ['success', 'warning', 'info', 'error'],
+      timer: null
     };
   },
   methods: {
     showMessage: function () {
       this.isShowMessage = true;
-      if (this.duration > 0) {
-        setTimeout(() => {
-          this.remove();
-        }, this.duration);
-      }
+      this.messageTimer();
     },
     remove: function () {
       this.isShowMessage = false;
@@ -35,6 +37,19 @@ export default {
     destroy: function () {
       this.$destroy();
       document.body.removeChild(this.$el);
+    },
+    messageTimer: function () {
+      if (this.duration > 0) {
+        this.timer = setTimeout(() => {
+          this.remove();
+        }, this.duration);
+      }
+    },
+    mouseOver: function () {
+      clearTimeout(this.timer);
+    },
+    mouseLeave: function () {
+      this.messageTimer();
     }
   }
 };
@@ -54,7 +69,6 @@ export default {
   border-radius: 0.2em;
   transform: translate(-50%, 0);
   background: #fff;
-  // transition: top 2s linear;
   z-index: 99999;
 
   &.message-success {
@@ -76,6 +90,15 @@ export default {
     background-color: #edf2fc;
     border-color: #e6ebf5;
     color: #878d99;
+  }
+  
+  .content {
+    .icon {
+      width: 0.9em;
+      height: 0.9em;
+      vertical-align: -0.08em;
+      margin-right: 0.4em;
+    }
   }
 }
 .fade-enter-active, .fade-leave-active {
