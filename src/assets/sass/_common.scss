@@ -135,3 +135,22 @@ a {
 .fr {
   float: right;
 }
+
+.mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 50000;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+// vue组件 transition
+.fade-enter-active, .fade-leave-active {
+  transition: all .3s ease;
+}
+.fade-enter, .fade-leave-to {
+  transform: translate(-50%, -2em);
+  opacity: 0;
+}

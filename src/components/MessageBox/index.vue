@@ -1,6 +1,6 @@
 <template>
 <div class="message-box" v-show="isShowMessageBox">
-	<div class="mask"></div>
+	<div class="mask" @click="cancel"></div>
 	<div class="message-content">
     <svg class="icon" aria-hidden="true" @click="cancel">
       <use xlink:href="#icon-delete"></use>
@@ -163,15 +163,6 @@ export default {
         margin-left: 1em;
       }
     }
-  }
-  .mask {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    z-index: 50000;
-    background: rgba(0, 0, 0, 0.5);
   }
 }
 </style>

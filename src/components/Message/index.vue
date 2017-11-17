@@ -101,13 +101,6 @@ export default {
     }
   }
 }
-.fade-enter-active, .fade-leave-active {
-  transition: all .3s ease;
-}
-.fade-enter, .fade-leave-to {
-  transform: translate(-50%, -2em);
-  opacity: 0;
-}
 </style>
 
 
