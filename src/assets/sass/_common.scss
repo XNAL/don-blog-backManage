@@ -154,3 +154,43 @@ a {
   transform: translate(-50%, -2em);
   opacity: 0;
 }
+
+// 表单样式
+.form-group {
+  overflow: hidden;
+  margin-bottom: 1.5em;
+  box-sizing: border-box;
+  .form-label {
+    margin-bottom: 0.7em;
+    color: #999;
+  }
+  input,
+  textarea {
+    display: block;
+    width: 100%;
+    padding: 0 1em;
+    line-height: 3em;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 0.2em;
+    outline: none;
+    box-sizing: border-box;
+
+    &:focus {
+      border-color: $base-color;
+    }
+  }
+}
+.col-6 {
+  width: 50%;
+  padding: 0 0.7em;
+  box-sizing: border-box;
+}
+.col-12 {
+  width: 100%;
+  padding: 0 0.7em;
+  box-sizing: border-box;
+}
+.mb0 {
+  margin-bottom: 0;
+}

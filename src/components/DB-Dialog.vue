@@ -47,18 +47,19 @@ export default {
   .db-dialog-section {
     position: fixed;
     box-sizing: border-box;
-    padding: 1em;
+    padding: 1.5em;
+    width: 50%;
     min-width: 40em;
     left: 50%;
-    top: 20%;
+    top: 50%;
     transform: translate(-50%, -50%);
     border-radius: 0.4em;
     background: #fff;
     z-index: 50001;
     .icon {
       position: absolute;
-      top: 1em;
-      right: 1em;
+      top: 1.5em;
+      right: 1.5em;
       width: 0.9em;
       height: 0.9em;
       color: #878d99;
@@ -71,7 +72,7 @@ export default {
     .db-dialog-title {
       font-size: 1.2em;
       font-weight: 600;
-      margin-bottom: 1em;
+      margin-bottom: 1.5em;
       text-align: center;
     }
   }

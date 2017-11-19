@@ -22,7 +22,6 @@ exports.getTags = async(ctx) => {
   }
 }
 
-
 exports.getPostsByTagId = async(ctx) => {  
   let id = ctx.params.id || 0,
       page = ctx.query.page || 1,

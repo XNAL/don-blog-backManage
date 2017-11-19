@@ -2,6 +2,7 @@ const router = require('koa-router')();
 const controller = require('./admin.controller');
 const category = require('./category.controller');
 const tag = require('./tag.controller');
+const laboratory = require('./laboratory.controller');
 
 router.post('/login', controller.login);
 
@@ -21,5 +22,7 @@ router.get('/getTags', tag.getTags);
 router.put('/addNewTag/:name', tag.addNewTag);
 router.put('/updateTag/:id', tag.updateTag);
 router.put('/deleteTag/:id', tag.deleteTag);
+
+router.get('/getLaboratories', laboratory.getLaboratories);
 
 module.exports = router;

@@ -57,7 +57,7 @@ export default {
     };
   },
   methods: {
-    // 确定,将promise断定为完成态
+    // 确定,将promise断定为resolve状态
     confirm: function () {
       this.isShowMessageBox = false;
       if (this.isShowInput) {
@@ -73,14 +73,14 @@ export default {
       this.reject('cancel');
       this.remove();
     },
-    // 弹出messageBox,并创建promise对象，给父组件调用
+    // 弹出messageBox,并创建promise对象
     showMsgBox: function () {
       this.isShowMessageBox = true;
       this.promise = new Promise((resolve, reject) => {
         this.resolve = resolve;
         this.reject = reject;
       });
-      // 返回promise对象,给父级组件调用
+      // 返回promise对象
       return this.promise;
     },
     remove: function () {
