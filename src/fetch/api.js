@@ -2,6 +2,7 @@ import async from './fetch';
 import apiPost from './api-post';
 import apiCategory from './api-category';
 import apiTag from './api-tag';
+import apiLaboratory from './api-laboratory';
 
 const baseUrl = '/backapi/admin';
 
@@ -17,5 +18,6 @@ export default {
   },
   ...apiPost,
   ...apiCategory,
-  ...apiTag
+  ...apiTag,
+  ...apiLaboratory
 };

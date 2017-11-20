@@ -11,31 +11,32 @@
       </button>
     </div>
     <db-dialog :title="dialogTitle" :visible="isShowDialog" @hide-dialog="hideDialog">
-      <div class="dialog-form">
+      <form class="dialog-form">
         <div class="form-group mb0">
           <div class="col-6 fl">
             <div class="form-label">
-              <label for="poster">项目图片</label>
+              <label for="laboratory.poster">项目图片</label>
             </div>
             <div class="file-img">
-              <input type="file" id="poster">
+              <!-- <input type="file" id="poster">
               <img src="" alt="">
-              <label for="poster" class="btn-default btnUpload">上传图片</label>
+              <label for="poster" class="btn-default btnUpload">上传图片</label> -->
+              <db-upload :src="laboratory.poster" @upload-file="getImgFile"></db-upload>
             </div>
           </div>
-          
+
           <div class="col-6 fl">
             <div class="form-group">
               <div class="form-label">
                 <label for="name">项目名称</label>
               </div>
-              <input type="text" id="name">
+              <input type="text" id="name" v-model="laboratory.name">
             </div>
             <div class="form-group">
               <div class="form-label">
                 <label for="link">在线地址</label>
               </div>
-              <input type="text" id="link">
+              <input type="text" id="link" v-model="laboratory.link">
             </div>
           </div>
         </div>
@@ -43,32 +44,43 @@
           <div class="form-label">
             <label for="description">项目介绍</label>
           </div>
-          <textarea name="description" id="description"></textarea>
+          <textarea name="description" id="description" v-model="laboratory.description"></textarea>
         </div>
-      </div>
+      </form>
       <div slot="footer" class="dialog-footer">
         <button class="btn-default" @click="isShowDialog = false">取 消</button>
-        <button class="btn-primary" @click="isShowDialog = false">确 定</button>
+        <button class="btn-primary" @click="confrimLaboratory">确 定</button>
       </div>
     </db-dialog>
   </section>
 </template>
 
 <script>
+import api from '../fetch/api';
 import Menu from '../components/Menu';
 import Header from '../components/Header';
 import DBDialog from '../components/DB-Dialog';
+import Upload from '../components/Upload';
 
 export default {
   components: {
     'back-menu': Menu,
     'back-header': Header,
-    'db-dialog': DBDialog
+    'db-dialog': DBDialog,
+    'db-upload': Upload
   },
   data () {
     return {
       isShowDialog: false,
-      dialogTitle: ''
+      dialogTitle: '',
+      imgFile: null,
+      laboratory: {
+        id: 0,
+        name: '',
+        link: '',
+        poster: '',
+        description: ''
+      }
     };
   },
   methods: {
@@ -78,6 +90,18 @@ export default {
     addProject: function () {
       this.dialogTitle = '添加项目';
       this.isShowDialog = true;
+    },
+    getImgFile (file) {
+      this.imgFile = file;
+      console.log('file', file);
+    },
+    confrimLaboratory: async function () {
+      this.isShowDialog = false;
+      let formData = new FormData();
+      formData.append('uploadFile', this.imgFile);
+      formData.append('data', JSON.stringify(this.laboratory));
+      let res = await api.createNewLaboratory(formData);
+      console.log('res', res);
     }
   }
 };
@@ -106,27 +130,17 @@ export default {
   }
   .dialog-footer {
     float: right;
-    margin-top: .5em;
+    margin-top: 0.5em;
     .btn-primary {
       margin-left: 1em;
     }
   }
   .dialog-form {
-    #poster {
-      display: none;
-    }
     .file-img {
       position: relative;
       border: 1px solid #ccc;
       height: 9.2em;
       box-sizing: border-box;
-
-      .btnUpload {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
     }
   }
 }

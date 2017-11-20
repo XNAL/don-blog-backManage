@@ -24,5 +24,6 @@ router.put('/updateTag/:id', tag.updateTag);
 router.put('/deleteTag/:id', tag.deleteTag);
 
 router.get('/getLaboratories', laboratory.getLaboratories);
+router.post('/createNewLaboratory', laboratory.createNewLaboratory);
 
 module.exports = router;

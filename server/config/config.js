@@ -20,6 +20,8 @@ module.exports = {
         }
 	},
     root: path.normalize(__dirname + '/..'),
-    appPath:"src",
+    appPath: 'src',
+    tempUploads: 'tempUploads',
+    uploads: 'uploads',
 	port: 9000
 };

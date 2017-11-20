@@ -1,17 +1,12 @@
 import axios from 'axios';
-import qs from 'qs';
 
 // 需要使用代理来解决跨域问题
-axios.defaults.headers.post['Content-Type'] =
-  'application/x-www-form-urlencoded';
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 axios.defaults.timeout = 20000;
 
 // Add a request interceptor
 axios.interceptors.request.use(
   config => {
-    if (config.method === 'post') {
-      config.data = qs.stringify(config.data);
-    }
     return config;
   },
   error => {
@@ -32,7 +27,7 @@ axios.interceptors.response.use(
   }
 );
 
-export default async (url = '', params = {}, method = 'get') => {
+export default async (url = '', params = {}, method = 'get', isUpload = false) => {
   method = method.toLowerCase();
   if (method === 'get') {
     let paramArr = [];
@@ -58,9 +53,17 @@ export default async (url = '', params = {}, method = 'get') => {
         });
     });
   } else if (method === 'post') {
+    let config = {};
+    if (isUpload) {
+      config = {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      };
+    }
     return new Promise((resolve, reject) => {
       axios
-        .post(url, params)
+        .post(url, params, config)
         .then(
           response => {
             resolve(response);

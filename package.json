@@ -16,6 +16,7 @@
     "eslint-plugin-node": "^5.2.1",
     "eslint-plugin-promise": "^3.6.0",
     "eslint-plugin-standard": "^3.0.1",
+    "formidable": "^1.1.1",
     "ioredis": "^3.2.1",
     "koa": "^2.3.0",
     "koa-bodyparser": "^4.2.0",
