@@ -10,6 +10,7 @@
         </svg>添加项目
       </button>
     </div>
+    <project v-for="project in laboratories" :project="project" :key="project.id"></project>
     <db-dialog :title="dialogTitle" :visible="isShowDialog" @hide-dialog="hideDialog">
       <form class="dialog-form">
         <div class="form-group mb0">
@@ -18,13 +19,9 @@
               <label for="laboratory.poster">项目图片</label>
             </div>
             <div class="file-img">
-              <!-- <input type="file" id="poster">
-              <img src="" alt="">
-              <label for="poster" class="btn-default btnUpload">上传图片</label> -->
               <db-upload :src="laboratory.poster" @upload-file="getImgFile"></db-upload>
             </div>
           </div>
-
           <div class="col-6 fl">
             <div class="form-group">
               <div class="form-label">
@@ -61,16 +58,19 @@ import Menu from '../components/Menu';
 import Header from '../components/Header';
 import DBDialog from '../components/DB-Dialog';
 import Upload from '../components/Upload';
+import Project from '../components/Project';
 
 export default {
   components: {
     'back-menu': Menu,
     'back-header': Header,
     'db-dialog': DBDialog,
-    'db-upload': Upload
+    'db-upload': Upload,
+    Project
   },
   data () {
     return {
+      laboratories: [],
       isShowDialog: false,
       dialogTitle: '',
       imgFile: null,
@@ -83,7 +83,16 @@ export default {
       }
     };
   },
+  created () {
+    this.getLaboratories();
+  },
   methods: {
+    getLaboratories: async function () {
+      let res = await api.getLaboratories();
+      if (res.success === 1) {
+        this.laboratories = res.laboratories;
+      }
+    },
     hideDialog: function () {
       this.isShowDialog = false;
     },

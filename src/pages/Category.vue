@@ -65,8 +65,8 @@ export default {
   methods: {
     getCategories: async function () {
       let res = await api.getCategories();
-      if (res.data.success === 1) {
-        let categories = res.data.categories;
+      if (res.success === 1) {
+        let categories = res.categories;
         let total = 0;
         for (let cat of Object.values(categories)) {
           total += cat.count;
@@ -84,8 +84,8 @@ export default {
       this.currentCat = cat;
       this.total = cat.count;
       let res = await api.getPostsByCatId(cat.id, this.page, this.pageSize);
-      if (res.data.success === 1) {
-        this.postList = res.data.posts;
+      if (res.success === 1) {
+        this.postList = res.posts;
       }
     },
     changePage: function (newPage) {
@@ -99,9 +99,9 @@ export default {
         isShowInput: true
       }).then(async (val) => {
         let res = await api.addNewCategory(val);
-        if (res.data.success === 1) {
+        if (res.success === 1) {
           this.catList.push({
-            id: res.data.newId,
+            id: res.newId,
             name: val,
             count: 0
           });
@@ -112,7 +112,7 @@ export default {
         } else {
           this.$message.showMessage({
             type: 'error',
-            content: res.data.message
+            content: res.message
           });
         }
       }).catch(() => {
@@ -127,7 +127,7 @@ export default {
         inputValue: cat.name
       }).then(async (val) => {
         let res = await api.updateCategory(cat.id, val);
-        if (res.data.success === 1) {
+        if (res.success === 1) {
           this.catList[index].name = val;
           this.$message.showMessage({
             type: 'success',
@@ -137,7 +137,7 @@ export default {
         } else {
           this.$message.showMessage({
             type: 'error',
-            content: res.data.message
+            content: res.message
           });
         }
       }).catch(() => {
@@ -160,7 +160,7 @@ export default {
           content: '确认是否删除该分类？'
         }).then(async () => {
           let res = await api.deleteCategory(cat.id);
-          if (res.data.success === 1) {
+          if (res.success === 1) {
             this.catList.splice(index, 1);
             this.$message.showMessage({
               type: 'success',
@@ -169,7 +169,7 @@ export default {
           } else {
             this.$message.showMessage({
               type: 'error',
-              content: res.data.message
+              content: res.message
             });
           }
         }).catch(() => {

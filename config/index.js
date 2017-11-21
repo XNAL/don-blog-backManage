@@ -38,6 +38,13 @@ module.exports = {
         pathRewrite: {                //需要rewrite重写的, 如果在服务器端做了处理则可以不要这段
           '^/backapi': '/backapi'
         }   
+      },    
+      '/uploads': {
+        target: 'http://localhost:9000',
+        changeOrigin: true,
+        pathRewrite: {                //需要rewrite重写的, 如果在服务器端做了处理则可以不要这段
+          '^/uploads': '/uploads'
+        }   
       }
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"

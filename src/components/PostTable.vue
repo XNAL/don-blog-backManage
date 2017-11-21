@@ -72,7 +72,7 @@ export default {
         content: '确认是否下线该篇文章？'
       }).then(async () => {
         let res = await api.offlinePost(postId);
-        if (res.data.success === 1) {
+        if (res.success === 1) {
           this.postList[index].status = 'OFFLINE';
           this.$message.showMessage({
             type: 'success',
@@ -81,7 +81,7 @@ export default {
         } else {
           this.$message.showMessage({
             type: 'error',
-            content: res.data.message
+            content: res.message
           });
         }
       }).catch(() => {
@@ -94,7 +94,7 @@ export default {
         content: '确认是否发布该篇文章？'
       }).then(async () => {
         let res = await api.publishPost(postId);
-        if (res.data.success === 1) {
+        if (res.success === 1) {
           this.postList[index].status = 'PUBLISHED';
           this.$message.showMessage({
             type: 'success',
@@ -103,16 +103,12 @@ export default {
         } else {
           this.$message.showMessage({
             type: 'error',
-            content: res.data.message
+            content: res.message
           });
         }
       }).catch(() => {
         return false;
       });
-      // let res = await api.publishPost(postId);
-      // if (res.data.success === 1) {
-      //   this.postList[index].status = 'PUBLISHED';
-      // }
     }
   }
 };

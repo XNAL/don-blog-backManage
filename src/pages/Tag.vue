@@ -65,9 +65,9 @@ export default {
   methods: {
     getTags: async function () {
       let res = await api.getTags();
-      if (res.data.success === 1) {
-        let tags = res.data.tags;
-        let total = res.data.total;
+      if (res.success === 1) {
+        let tags = res.tags;
+        let total = res.total;
         tags.unshift({
           id: 0,
           name: '全部标签',
@@ -81,8 +81,8 @@ export default {
       this.currentTag = tag;
       this.total = tag.count;
       let res = await api.getPostsByTagId(tag.id, this.page, this.pageSize);
-      if (res.data.success === 1) {
-        this.postList = res.data.posts;
+      if (res.success === 1) {
+        this.postList = res.posts;
       }
     },
     changePage: function (newPage) {
@@ -96,9 +96,9 @@ export default {
         isShowInput: true
       }).then(async (val) => {
         let res = await api.addNewTag(val);
-        if (res.data.success === 1) {
+        if (res.success === 1) {
           this.tagList.push({
-            id: res.data.newId,
+            id: res.newId,
             name: val,
             count: 0
           });
@@ -109,7 +109,7 @@ export default {
         } else {
           this.$message.showMessage({
             type: 'error',
-            content: res.data.message
+            content: res.message
           });
         }
       }).catch(() => {
@@ -124,7 +124,7 @@ export default {
         inputValue: tag.name
       }).then(async (val) => {
         let res = await api.updateTag(tag.id, val);
-        if (res.data.success === 1) {
+        if (res.success === 1) {
           this.tagList[index].name = val;
           this.$message.showMessage({
             type: 'success',
@@ -133,7 +133,7 @@ export default {
         } else {
           this.$message.showMessage({
             type: 'error',
-            content: res.data.message
+            content: res.message
           });
         }
       }).catch(() => {
@@ -150,7 +150,7 @@ export default {
         content: content
       }).then(async () => {
         let res = await api.deleteTag(tag.id);
-        if (res.data.success === 1) {
+        if (res.success === 1) {
           this.tagList.splice(index, 1);
           this.$message.showMessage({
             type: 'success',
@@ -159,7 +159,7 @@ export default {
         } else {
           this.$message.showMessage({
             type: 'error',
-            content: res.data.message
+            content: res.message
           });
         }
       }).catch(() => {

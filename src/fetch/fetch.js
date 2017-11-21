@@ -42,7 +42,7 @@ export default async (url = '', params = {}, method = 'get', isUpload = false) =
         .get(url)
         .then(
           response => {
-            resolve(response);
+            resolve(response.data);
           },
           err => {
             reject(err);
@@ -66,7 +66,7 @@ export default async (url = '', params = {}, method = 'get', isUpload = false) =
         .post(url, params, config)
         .then(
           response => {
-            resolve(response);
+            resolve(response.data);
           },
           err => {
             reject(err);
@@ -82,7 +82,7 @@ export default async (url = '', params = {}, method = 'get', isUpload = false) =
         .put(url, params)
         .then(
           response => {
-            resolve(response);
+            resolve(response.data);
           },
           err => {
             reject(err);

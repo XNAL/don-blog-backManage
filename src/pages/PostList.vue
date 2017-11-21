@@ -40,14 +40,14 @@ export default {
   methods: {
     getPostList: async function () {
       let res = await api.getPostList(this.page, this.pageSize);
-      if (res.data.success === 1) {
-        this.postList = res.data.posts;
+      if (res.success === 1) {
+        this.postList = res.posts;
       }
     },
     getPostTotal: async function () {
       let res = await api.getPostTotal();
-      if (res.data.success === 1) {
-        this.total = res.data.total;
+      if (res.success === 1) {
+        this.total = res.total;
       }
     },
     changePage: function (newPage) {
