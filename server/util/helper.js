@@ -54,9 +54,7 @@ exports.uploadFile = (ctx) => {
     form.parse(ctx.req, (err, fields, files) => {
       if (err) {
         reject(err)
-      }      
-      console.log('files', files);
-      console.log('fields', fields);
+      }
       let data = JSON.parse(fields.data);
 
       let filePath = '';

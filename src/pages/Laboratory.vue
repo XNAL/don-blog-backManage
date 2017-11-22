@@ -3,14 +3,17 @@
     <back-menu></back-menu>
     <back-header></back-header>
     <div class="laboratory-header">
-      <h2>实验室项目列表</h2>
+      <h2><span>实验室项目列表</span></h2>
       <button class="btn-default btn-add" @click="addProject">
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-add"></use>
         </svg>添加项目
       </button>
     </div>
-    <project v-for="project in laboratories" :project="project" :key="project.id"></project>
+    <project v-for="(project, index) in laboratories" 
+            :project="project"
+            :position="`${index % 2 === 0 ? 'left' : 'right'}`"
+            :key="project.id"></project>
     <db-dialog :title="dialogTitle" :visible="isShowDialog" @hide-dialog="hideDialog">
       <form class="dialog-form">
         <div class="form-group mb0">
@@ -45,7 +48,7 @@
         </div>
       </form>
       <div slot="footer" class="dialog-footer">
-        <button class="btn-default" @click="isShowDialog = false">取 消</button>
+        <button class="btn-default" @click="cancel">取 消</button>
         <button class="btn-primary" @click="confrimLaboratory">确 定</button>
       </div>
     </db-dialog>
@@ -74,7 +77,8 @@ export default {
       isShowDialog: false,
       dialogTitle: '',
       imgFile: null,
-      laboratory: {
+      laboratory: {},
+      newLaboratory: {
         id: 0,
         name: '',
         link: '',
@@ -84,6 +88,7 @@ export default {
     };
   },
   created () {
+    this.laboratory = Object.assign({}, this.newLaboratory);
     this.getLaboratories();
   },
   methods: {
@@ -100,9 +105,9 @@ export default {
       this.dialogTitle = '添加项目';
       this.isShowDialog = true;
     },
-    getImgFile (file) {
+    getImgFile (file, imgSrc) {
       this.imgFile = file;
-      console.log('file', file);
+      this.laboratory.poster = imgSrc;
     },
     confrimLaboratory: async function () {
       this.isShowDialog = false;
@@ -110,7 +115,22 @@ export default {
       formData.append('uploadFile', this.imgFile);
       formData.append('data', JSON.stringify(this.laboratory));
       let res = await api.createNewLaboratory(formData);
-      console.log('res', res);
+      if (res.success === 1) {
+        this.$message.showMessage({
+          type: 'success',
+          content: '添加项目成功'
+        });
+        this.getLaboratories();
+      } else {
+        this.$message.showMessage({
+          type: 'error',
+          content: res.message
+        });
+      }
+    },
+    cancel: function () {
+      this.laboratory = Object.assign({}, this.newLaboratory);
+      this.isShowDialog = false;
     }
   }
 };
@@ -122,6 +142,11 @@ export default {
   .laboratory-header {
     position: relative;
     line-height: 2.8em;
+    h2 > span {
+      display: inline-block;
+      height: 100%;
+      border-bottom: 1px solid $base-color;
+    }
     .btn-add {
       position: absolute;
       top: 0;
