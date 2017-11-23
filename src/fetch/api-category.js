@@ -12,6 +12,6 @@ export default {
     return async(`${baseUrl}/updateCategory/${id}?name=${name}`, {}, 'put');
   },
   deleteCategory (id) {
-    return async(`${baseUrl}/deleteCategory/${id}`, {}, 'put');
+    return async(`${baseUrl}/deleteCategory/${id}`, {}, 'delete');
   }
 };

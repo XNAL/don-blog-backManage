@@ -12,6 +12,6 @@ export default {
     return async(`${baseUrl}/updateTag/${id}?name=${name}`, {}, 'put');
   },
   deleteTag (id) {
-    return async(`${baseUrl}/deleteTag/${id}`, {}, 'put');
+    return async(`${baseUrl}/deleteTag/${id}`, {}, 'delete');
   }
 };

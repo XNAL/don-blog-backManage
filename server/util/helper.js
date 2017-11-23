@@ -57,6 +57,14 @@ exports.uploadFile = (ctx) => {
       }
       let data = JSON.parse(fields.data);
 
+      // 更新时未修改图片的情况
+      if(files.uploadFile === undefined && data.poster !== '') {
+        return resolve({
+          fields: data,
+          filePath: data.poster
+        })
+      }
+      
       let filePath = '';
       // 如果提交文件的form中将上传文件的input名设置为uploadFile，就从uploadFile中取上传文件。否则取for in循环第一个上传的文件。
       if (files.uploadFile) {

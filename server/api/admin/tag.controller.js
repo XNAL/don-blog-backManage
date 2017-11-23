@@ -55,7 +55,7 @@ exports.getPostsByTagId = async(ctx) => {
 exports.addNewTag = async(ctx) => {
   let name = ctx.params.name || 0;
   try {
-    let existName = await ctx.execSql(`SELECT * FROM tag WHERE name = '${name}'`);
+    let existName = await ctx.execSql(`SELECT * FROM tag WHERE name = ?`, name);
     if (existName.length > 0) {
       ctx.body = {
         success: 0,
@@ -63,7 +63,7 @@ exports.addNewTag = async(ctx) => {
       };
       return false;
     }
-    let results = await ctx.execSql(`INSERT INTO tag SET name = '${name}'`);
+    let results = await ctx.execSql(`INSERT INTO tag SET name = ?`, name);
     ctx.body = {
       success: 1,
       message: '',
@@ -83,7 +83,7 @@ exports.updateTag = async(ctx) => {
   let id = ctx.params.id || 0,
       name = ctx.query.name || '';
   try {
-    let existName = await ctx.execSql(`SELECT * FROM tag WHERE name = '${name}' AND id <> ${id}`);
+    let existName = await ctx.execSql(`SELECT * FROM tag WHERE name = ? AND id <> ?`, [name, id]);
     if (existName.length > 0) {
       ctx.body = {
         success: 0,
@@ -91,7 +91,7 @@ exports.updateTag = async(ctx) => {
       };
       return false;
     }
-    let results = await ctx.execSql(`UPDATE tag SET name = '${name}' WHERE id = ${id}`);
+    let results = await ctx.execSql(`UPDATE tag SET name = ? WHERE id = ?`, [name, id]);
     ctx.body = {
       success: 1,
       message: ''
@@ -109,8 +109,8 @@ exports.updateTag = async(ctx) => {
 exports.deleteTag = async(ctx) => {
   let id = ctx.params.id || 0;
   try {
-    let results = await ctx.execSql(`DELETE FROM tag WHERE id = ${id}`);
-    let results2 = await ctx.execSql(`DELETE FROM post_tag WHERE tagId = ${id}`);
+    let results = await ctx.execSql(`DELETE FROM tag WHERE id = ?`, id);
+    let results2 = await ctx.execSql(`DELETE FROM post_tag WHERE tagId = ?`, id);
     ctx.body = {
       success: 1,
       message: ''

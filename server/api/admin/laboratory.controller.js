@@ -50,6 +50,47 @@ exports.createNewLaboratory = async(ctx) => {
       success: 0,
       message: '参数错误'
     };
-    return false;
+  }
+}
+
+exports.updateLaboratory = async(ctx) => {
+  let result;
+  try {    
+    result = await helper.uploadFile(ctx);
+    let fields = result.fields;
+    let laboratory = {
+      name: fields.name,
+      link: fields.link,
+      description: fields.description,
+      poster: result.filePath,
+      createTime: moment().format('YYYY-MM-DD HH:mm:ss')
+    };
+    let update = await ctx.execSql('UPDATE laboratory SET ? WHERE id = ?', [laboratory, fields.id]);
+    ctx.body = {
+      success: 1,
+      poster: laboratory.poster
+    };
+  } catch (error) {
+    console.log('error', error);
+    ctx.body = {
+      success: 0,
+      message: '参数错误'
+    };
+  }
+}
+
+exports.deleteLaboratory = async(ctx) => {
+  let id = ctx.req.params.id || 0;
+  try {    
+    let result = await ctx.execSql('DELETE FROM laboratory WHERE id = ?', id);
+    ctx.body = {
+      success: 1
+    };
+  } catch (error) {
+    console.log('error', error);
+    ctx.body = {
+      success: 0,
+      message: '删除项目出错'
+    };
   }
 }

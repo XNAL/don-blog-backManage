@@ -12,7 +12,7 @@ exports.login = async(ctx) => {
   }
 
   try {
-    let results = await ctx.execSql(`SELECT hashedPassword, salt FROM user WHERE role='ADMIN' and userName = '${userName}'`);
+    let results = await ctx.execSql(`SELECT hashedPassword, salt FROM user WHERE role='ADMIN' and userName = ?`, userName);
     if (results.length > 0) {
       let hashedPassword = results[0].hashedPassword,
           salt = results[0].salt,
@@ -90,7 +90,7 @@ exports.getPostTotal = async(ctx) => {
 exports.offlinePost = async(ctx) => {
   let id = ctx.params.id || 0;
   try {
-    let results = await ctx.execSql(`UPDATE post SET status = 'OFFLINE' WHERE id = ${id}`);
+    let results = await ctx.execSql(`UPDATE post SET status = 'OFFLINE' WHERE id = ?`, id);
     ctx.body = {
       success: 1,
       message: ''
@@ -107,7 +107,7 @@ exports.offlinePost = async(ctx) => {
 exports.publishPost = async(ctx) => {
   let id = ctx.params.id || 0;
   try {
-    let results = await ctx.execSql(`UPDATE post SET status = 'PUBLISHED' WHERE id = ${id}`);
+    let results = await ctx.execSql(`UPDATE post SET status = 'PUBLISHED' WHERE id = ?`, id);
     ctx.body = {
       success: 1,
       message: ''

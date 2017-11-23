@@ -92,6 +92,22 @@ export default async (url = '', params = {}, method = 'get', isUpload = false) =
           reject(error);
         });
     });
+  } else if (method === 'delete') {
+    return new Promise((resolve, reject) => {
+      axios
+        .delete(url)
+        .then(
+          response => {
+            resolve(response.data);
+          },
+          err => {
+            reject(err);
+          }
+        )
+        .catch(error => {
+          reject(error);
+        });
+    });
   } else {
     let error = '传递的参数错误';
     return Promise.reject(error);

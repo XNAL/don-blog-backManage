@@ -7,5 +7,11 @@ export default {
   },
   createNewLaboratory (params) {
     return async(`${baseUrl}/createNewLaboratory`, params, 'post', true);
+  },
+  updateLaboratory (params) {
+    return async(`${baseUrl}/updateLaboratory`, params, 'post', true);
+  },
+  deleteLaboratory (id) {
+    return async(`${baseUrl}/deleteLaboratory/${id}`, {}, 'delete');
   }
 };

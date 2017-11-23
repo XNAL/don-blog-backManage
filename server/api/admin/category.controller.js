@@ -48,7 +48,7 @@ exports.getPostsByCatId = async(ctx) => {
 exports.addNewCategory = async(ctx) => {
   let name = ctx.params.name || 0;
   try {   
-    let existName = await ctx.execSql(`SELECT * FROM category WHERE name = '${name}'`);
+    let existName = await ctx.execSql(`SELECT * FROM category WHERE name = ?`, name);
     if (existName.length > 0) {
       ctx.body = {
         success: 0,
@@ -56,7 +56,7 @@ exports.addNewCategory = async(ctx) => {
       };
       return false;
     }
-    let results = await ctx.execSql(`INSERT INTO category SET name = '${name}'`);
+    let results = await ctx.execSql(`INSERT INTO category SET name = ?`, name);
     ctx.body = {
       success: 1,
       message: '',
@@ -76,7 +76,7 @@ exports.updateCategory = async(ctx) => {
   let id = ctx.params.id || 0,
       name = ctx.query.name || '';
   try {    
-    let existName = await ctx.execSql(`SELECT * FROM category WHERE name = '${name}' AND id <> ${id}`);
+    let existName = await ctx.execSql(`SELECT * FROM category WHERE name = ? AND id <> ?`, [name, id]);
     if (existName.length > 0) {
       ctx.body = {
         success: 0,
@@ -84,7 +84,7 @@ exports.updateCategory = async(ctx) => {
       };
       return false;
     }
-    let results = await ctx.execSql(`UPDATE category SET name = '${name}' WHERE id = ${id}`);
+    let results = await ctx.execSql(`UPDATE category SET name = ? WHERE id = ?`, [name, id]);
     ctx.body = {
       success: 1,
       message: ''
@@ -102,7 +102,7 @@ exports.updateCategory = async(ctx) => {
 exports.deleteCategory = async(ctx) => {
   let id = ctx.params.id || 0;
   try {
-    let results = await ctx.execSql(`DELETE FROM category WHERE id = ${id}`);
+    let results = await ctx.execSql(`DELETE FROM category WHERE id = ?`, id);
     ctx.body = {
       success: 1,
       message: ''
