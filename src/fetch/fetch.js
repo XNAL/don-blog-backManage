@@ -7,6 +7,11 @@ axios.defaults.timeout = 20000;
 // Add a request interceptor
 axios.interceptors.request.use(
   config => {
+    const token = localStorage.getItem('DON_BLOG_TOKEN');
+    if (token) {
+      // Bearer是JWT的认证头部信息
+      config.headers.common['Authorization'] = 'Bearer ' + token;
+    }
     return config;
   },
   error => {
@@ -17,9 +22,6 @@ axios.interceptors.request.use(
 // Add a response interceptor
 axios.interceptors.response.use(
   response => {
-    if (!response.status === 200) {
-      return Promise.reject(response);
-    }
     return response;
   },
   error => {

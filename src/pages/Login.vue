@@ -43,6 +43,7 @@ export default {
       let res = await api.login(this.userName, this.password);
       if (res.success === 1) {
         this.errMsg = '';
+        localStorage.setItem('DON_BLOG_TOKEN', res.token);
         this.$router.push({ path: '/postlist' });
       } else {
         this.errMsg = res.message;

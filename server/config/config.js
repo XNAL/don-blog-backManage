@@ -23,5 +23,6 @@ module.exports = {
     appPath: 'src',
     tempUploads: 'tempUploads',
     uploads: 'uploads',
-	port: 9000
+    port: 9000,
+    tokenSecret: 'test'
 };

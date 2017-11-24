@@ -1,11 +1,11 @@
 <template>
   <section class="header">
-    <template v-for="(item, index) in $route.meta"> 
+    <template v-for="(item, index) in $route.meta.paths"> 
       <router-link class="breadcrumb no-underline" :to="item.link" :key="index" v-if="item.link !== ''">
         {{ item.name }}
       </router-link>
       <span class="no-link" :key="index" v-else>{{ item.name }}</span>
-      <span class="separator" :key="index" v-show="index !== $route.meta.length - 1">/</span>
+      <span class="separator" :key="index" v-show="index !== $route.meta.paths.length - 1">/</span>
     </template> 
   </section>
 </template>

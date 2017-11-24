@@ -3,6 +3,7 @@
 import Vue from 'vue';
 import App from './App';
 import router from './router';
+import axios from 'axios';
 
 import MessageBox from './components/MessageBox/index';
 import Message from './components/Message/index';
@@ -10,6 +11,26 @@ Vue.use(MessageBox);
 Vue.use(Message);
 
 Vue.config.productionTip = false;
+
+axios.interceptors.response.use(
+  response => {
+    return response;
+  },
+  error => {
+    if (error.response.status === 403) {
+      Vue.prototype.$msgBox.showMsgBox({
+        title: '错误提示',
+        content: '您的登录信息已失效，请重新登录',
+        isShowCancelBtn: false
+      }).then((val) => {
+        router.push('/login');
+      }).catch(() => {
+        console.log('cancel');
+      });
+    }
+    return Promise.reject(error);
+  }
+);
 
 /* eslint-disable no-new */
 new Vue({
