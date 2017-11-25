@@ -42,6 +42,12 @@
         </div>
         <div class="form-group col-12">
           <div class="form-label">
+            <label for="github">GitHub地址</label>
+          </div>
+          <input name="github" id="github" v-model="laboratory.github"></input>
+        </div>
+        <div class="form-group col-12">
+          <div class="form-label">
             <label for="description">项目介绍</label>
           </div>
           <textarea name="description" id="description" v-model="laboratory.description"></textarea>
@@ -82,6 +88,7 @@ export default {
         id: 0,
         name: '',
         link: '',
+        github: '',
         poster: '',
         description: ''
       }

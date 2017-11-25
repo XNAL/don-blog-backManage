@@ -5,7 +5,7 @@ const Message = {};
 // vue的install方法，用于定义vue插件
 Message.install = function (Vue, options) {
   const MessageInstance = Vue.extend(msgVue);
-  let currentMsg, instance;
+  let currentMsg;
   const initInstance = () => {
     // 实例化vue实例
     currentMsg = new MessageInstance();
@@ -15,7 +15,7 @@ Message.install = function (Vue, options) {
   // 在Vue的原型上添加实例方法，以全局调用
   Vue.prototype.$message = {
     showMessage (options) {
-      if (!instance) {
+      if (!currentMsg) {
         initInstance();
       }
       if (typeof options === 'string') {

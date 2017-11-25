@@ -16,7 +16,7 @@ app.use(resource(path.join(config.root, config.appPath)));
 app.use(jwt({
   secret: config.tokenSecret
 }).unless({
-  path: [/^\/backapi\/admin\/login/]
+  path: [/^\/backapi\/admin\/login/, /^\/blogapi\//]
 }));
 
 module.exports = app;

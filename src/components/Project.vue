@@ -18,7 +18,20 @@
     <div :class="['part-two', `${(position === 'right' ? 'right' : 'left') === 'left' ? 'right' : 'left'}`]">
       <h3 class="name">{{ project.name }}</h3>
       <p class="description">{{ project.description }}</p>
-      <p><a :href="project.link" class="link" target="_blank">在线效果</a></p>
+      <p class="link-address" v-if="project.link !== ''">
+        <a :href="project.link" class="btn-default link no-underline" target="_blank">
+          <svg class="icon" aria-hidden="true" @click="deleteProject">
+            <use xlink:href="#icon-web"></use>
+          </svg>在线效果
+        </a>
+      </p>
+      <p class="link-address" v-if="project.github">
+        <a :href="project.github" class="btn-default github no-underline" target="_blank">
+          <svg class="icon" aria-hidden="true" @click="deleteProject">
+            <use xlink:href="#icon-github1"></use>
+          </svg>GitHub查看
+        </a>
+      </p>
     </div>
     <db-dialog :title="dialogTitle" :visible="isShowDialog" @hide-dialog="hideDialog">
       <form class="dialog-form">
@@ -45,6 +58,12 @@
               <input type="text" id="link" v-model="laboratory.link">
             </div>
           </div>
+        </div>
+        <div class="form-group col-12">
+          <div class="form-label">
+            <label for="github">GitHub地址</label>
+          </div>
+          <input type="text" id="github" v-model="laboratory.github">
         </div>
         <div class="form-group col-12">
           <div class="form-label">
@@ -221,6 +240,19 @@ export default {
 
     h3 {
       font-size: 1.5em;
+    }
+    .link-address {
+      margin: 1em auto;
+      .icon {
+        margin-right: 0.4em;
+        width: 0.9em;
+        height: 0.9em;
+        vertical-align: -0.04em;
+      }
+    }
+    .link,
+    .github {
+      padding: 0.4em 0.8em;
     }
   }
   .dialog-footer {

@@ -27,6 +27,7 @@ exports.createNewLaboratory = async(ctx) => {
     let laboratory = {
       name: fields.name,
       link: fields.link,
+      github: fields.github,
       description: fields.description,
       poster: result.filePath,
       createTime: moment().format('YYYY-MM-DD HH:mm:ss')
@@ -61,6 +62,7 @@ exports.updateLaboratory = async(ctx) => {
     let laboratory = {
       name: fields.name,
       link: fields.link,
+      github: fields.github,
       description: fields.description,
       poster: result.filePath,
       createTime: moment().format('YYYY-MM-DD HH:mm:ss')
