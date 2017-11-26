@@ -8,7 +8,7 @@
 		<h3 class="title">{{ title }}</h3>
 		<p class="content">{{ content }}</p>
     <div>
-      <input type="text" v-model="inputValue" v-if="isShowInput" ref="input">
+      <input type="text" v-model="inputValue" v-if="isShowInput" ref="input" @keyup.enter="confirm">
     </div>
 		<div class="btn-group">
 			<button class="btn-default" @click="cancel" v-show="isShowCancelBtn">{{ cancelBtnText }}</button>

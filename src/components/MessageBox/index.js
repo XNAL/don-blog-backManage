@@ -6,7 +6,6 @@ const MessageBox = {};
 MessageBox.install = function (Vue, options) {
   const MessageBoxInstance = Vue.extend(msgboxVue);
   let currentMsg;
-  // let instanceArray = [];
   const initInstance = () => {
     // 实例化vue实例
     currentMsg = new MessageBoxInstance();
