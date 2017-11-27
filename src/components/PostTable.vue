@@ -20,7 +20,9 @@
               <td>{{ post.createTime | formatTime }}</td>
               <td>{{ post.status | setStatus }}</td>
               <td>
-                <button class="btn-default btn-edit" @click="editPost(post.id)">编辑</button>
+                <router-link :to="`/edit/${post.id}`" class="no-underline">
+                  <button class="btn-default btn-edit">编辑</button>
+                </router-link>
                 <button class="btn-default btn-offline" @click="offlinePost(post.id, index)" 
                         v-if="post.status === 'PUBLISHED'">下线</button>
                 <button class="btn-default btn-publish" @click="publishPost(post.id, index)" v-else>发布</button>
@@ -134,7 +136,6 @@ export default {
         padding-left: 1em;
         border: 1px solid #dfe6ec;
       }
-
       button {
         padding: 0.4em 1em;
 

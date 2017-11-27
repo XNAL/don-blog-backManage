@@ -165,7 +165,8 @@ a {
     color: #999;
   }
   input,
-  textarea {
+  textarea,
+  select {
     display: block;
     width: 100%;
     padding: 0 1em;
@@ -179,6 +180,9 @@ a {
     &:focus {
       border-color: $base-color;
     }
+  }
+  select {
+    height: 3em;
   }
 }
 .col-6 {

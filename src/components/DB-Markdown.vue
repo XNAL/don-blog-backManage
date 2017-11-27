@@ -10,6 +10,12 @@
 <script>
 import marked from 'marked';
 export default {
+  props: {
+    content: {
+      type: String,
+      default: ''
+    }
+  },
   data () {
     return {
       markdownContent: '',
@@ -19,7 +25,11 @@ export default {
   watch: {
     markdownContent: function () {
       this.markdownHtml = marked(this.markdownContent, { sanitize: true });
+      this.$emit('sync-content', this.markdownContent);
     }
+  },
+  created () {
+    this.markdownContent = this.content;
   }
 };
 </script>
@@ -43,7 +53,7 @@ export default {
       border: none;
       outline: none;
       box-sizing: border-box;
-  }
+    }
   }
   .vb-markdown-html {
     position: absolute;

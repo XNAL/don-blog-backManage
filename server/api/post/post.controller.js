@@ -26,7 +26,7 @@ exports.getPostList = async(ctx) => {
 exports.getPost = async(ctx) => {
   let id = ctx.params.id || 0,
     	sql = ` SELECT post.id, post.title, REPLACE(post.content, '<!-- more -->', '') AS content, 
-              post.poster, post.createTime, post.categoryId, category.name AS categoryName 
+              post.poster, post.createTime, post.categoryId, category.name AS categoryName, viewTotal 
               FROM post LEFT JOIN category ON post.categoryId = category.id 
               WHERE post.status = 'PUBLISHED' AND post.id = ${id}`,
     	tagSql = ` SELECT tagId, tag.name AS tagName from post_tag a LEFT JOIN tag on a.tagId = tag.id 
@@ -35,10 +35,12 @@ exports.getPost = async(ctx) => {
                         AND status = 'PUBLISHED' LIMIT 0, 1) AS tab
                       UNION
                       SELECT 1 AS sort, id, title FROM (SELECT * FROM post WHERE id < ${id} 
-                        AND status = 'PUBLISHED' ORDER BY id DESC LIMIT 0, 1) AS tab`
+                        AND status = 'PUBLISHED' ORDER BY id DESC LIMIT 0, 1) AS tab`,
+      updateSql = `UPDATE post SET viewTotal = ? WHERE id = ?`;
   try {
     let results = await ctx.execSql(sql);
     if (results.length > 0) {
+      let update = await ctx.execSql(updateSql, [results[0].viewTotal + 1, id]);
       let tagResults = await ctx.execSql(tagSql);
       let prevNextResults = await ctx.execSql(prevNextSql);
       let prev = {},

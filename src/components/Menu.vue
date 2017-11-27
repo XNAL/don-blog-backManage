@@ -11,6 +11,9 @@
         <router-link to="/postlist" exact class="no-underline">文章列表</router-link>
       </li>
       <li class="menu-item">
+        <router-link to="/edit" exact class="no-underline">新增文章</router-link>
+      </li>
+      <li class="menu-item">
         <router-link to="/category" exact class="no-underline">分类管理</router-link>
       </li>
       <li class="menu-item">

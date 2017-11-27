@@ -6,7 +6,7 @@ import PostList from '@/pages/PostList';
 import Category from '@/pages/Category';
 import Laboratory from '@/pages/Laboratory';
 import Tag from '@/pages/Tag';
-// import axios from 'axios';
+import Edit from '@/pages/Edit';
 
 Vue.use(Router);
 
@@ -48,6 +48,42 @@ const router = new Router({
         ],
         requireAuth: true
       }
+    },
+    {
+      path: '/edit',
+      name: 'Add',
+      component: Edit,
+      meta: {
+        paths: [
+          {
+            name: '首页',
+            link: '/'
+          },
+          {
+            name: '新增文章',
+            link: ''
+          }
+        ],
+        requireAuth: true
+      },
+      children: [{
+        path: ':id',
+        name: 'Edit',
+        component: Edit,
+        meta: {
+          paths: [
+            {
+              name: '首页',
+              link: '/'
+            },
+            {
+              name: '编辑文章',
+              link: ''
+            }
+          ],
+          requireAuth: true
+        }
+      }]
     },
     {
       path: '/category',
