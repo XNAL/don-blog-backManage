@@ -1,15 +1,20 @@
 const router = require('koa-router')();
 const admin = require('./admin.controller');
+const post = require('./post.controller');
 const category = require('./category.controller');
 const tag = require('./tag.controller');
 const laboratory = require('./laboratory.controller');
 
 router.post('/login', admin.login);
 
-router.get('/getPostList', admin.getPostList);
-router.get('/getPostTotal', admin.getPostTotal);
-router.put('/offlinePost/:id', admin.offlinePost);
-router.put('/publishPost/:id', admin.publishPost);
+router.get('/getPostById/:id', post.getPostById);
+router.post('/addPost', post.addPost);
+router.post('/updatePost/:id', post.updatePost);
+router.get('/getPostList', post.getPostList);
+router.get('/getPostTotal', post.getPostTotal);
+router.put('/offlinePost/:id', post.offlinePost);
+router.put('/publishPost/:id', post.publishPost);
+
 router.get('/getPostsByCatId/:id', category.getPostsByCatId);
 router.get('/getPostsByTagId/:id', tag.getPostsByTagId);
 

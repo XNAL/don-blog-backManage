@@ -2,6 +2,15 @@ import async from './fetch';
 const baseUrl = '/backapi/admin';
 
 export default {
+  getPostById (id) {
+    return async(`${baseUrl}/getPostById/${id}`);
+  },
+  addPost (params) {
+    return async(`${baseUrl}/addPost`, params, 'post');
+  },
+  updatePost (id, params) {
+    return async(`${baseUrl}/updatePost/${id}`, params, 'post');
+  },
   getPostList (page = 1, pageNum = 10) {
     return async(`${baseUrl}/getPostList`, {
       page: page,

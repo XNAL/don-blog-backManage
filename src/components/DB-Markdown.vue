@@ -23,6 +23,9 @@ export default {
     };
   },
   watch: {
+    content: function () {
+      this.markdownContent = this.content;
+    },
     markdownContent: function () {
       this.markdownHtml = marked(this.markdownContent, { sanitize: true });
       this.$emit('sync-content', this.markdownContent);
