@@ -24,9 +24,11 @@ router.put('/updateCategory/:id', category.updateCategory);
 router.delete('/deleteCategory/:id', category.deleteCategory);
 
 router.get('/getTags', tag.getTags);
+router.put('/addNewTagWhenPost/:name', tag.addNewTagWhenPost);
 router.put('/addNewTag/:name', tag.addNewTag);
 router.put('/updateTag/:id', tag.updateTag);
 router.delete('/deleteTag/:id', tag.deleteTag);
+router.get('/searchTagByName/:name', tag.searchTagByName);
 
 router.get('/getLaboratories', laboratory.getLaboratories);
 router.post('/createNewLaboratory', laboratory.createNewLaboratory);

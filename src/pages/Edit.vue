@@ -12,17 +12,25 @@
             {{ category.name }}
           </option>
         </select>
+        <button class="btn-default add-category" @click="addCategory">添加分类</button>
       </div>
-      <div class="form-group col-12">
+      <div class="form-group col-12 no-overflow">
         <div class="tag-group">
-          <span class="tag" v-for="(tag, index) in tags" :key="tag.id">
-            {{ tag.name }}
-            <svg class="icon" aria-hidden="true"
-                  @click.stop="deleteTag(tag, index)">
-              <use xlink:href="#icon-delete"></use>
-            </svg>
-          </span>
-          <input type="text" v-model.trim="newTag" placeholder="标签，可使用 逗号, 分号; 分割">
+          <div class="tag-list" ref="tagList">
+            <span class="tag" v-for="(tag, index) in tags" :key="tag.id">
+              {{ tag.name }}
+              <svg class="icon" aria-hidden="true"
+                    @click.stop="deleteTag(tag, index)">
+                <use xlink:href="#icon-delete"></use>
+              </svg>
+            </span>
+          </div>
+          <input type="text" v-model.trim="newTag" ref="inputTag" placeholder="标签，可使用 逗号, 分号; 分割">
+          <ul class="search-tag-list" ref="searchTagList" v-show="searchTags.length > 0">
+            <li class="search-tag" v-for="tag in searchTags" :key="tag.id" @click="selectTag(tag)">
+              {{ tag.name }}
+            </li>
+          </ul>
         </div>
       </div>
       <div class="form-group col-12">
@@ -61,7 +69,8 @@ export default {
         name: '请选择文章分类'
       }],
       tags: [],
-      newTag: ''
+      newTag: '',
+      searchTags: []
     };
   },
   watch: {
@@ -79,16 +88,43 @@ export default {
       }
     },
     newTag: async function () {
-      if (this.newTag.indexOf(',') > -1 || this.newTag.indexOf(';') > -1) {
-        let tagTemp = this.newTag.replace(',', '').replace(';', '');
-        let res = await api.addNewTag(tagTemp);
-        if (res.success === 1) {
-          this.tags.push({
-            id: res.newId,
-            name: tagTemp
-          });
-          this.newTag = '';
+      if (this.newTag.indexOf(',') > -1 || this.newTag.indexOf('，') > -1 ||
+          this.newTag.indexOf(';') > -1 || this.newTag.indexOf('；') > -1) {
+        let tagTemp = this.newTag.replace(',', '').replace('，', '')
+                                 .replace(';', '').replace('；', '');
+        // 先判断当前标签是否已存在，已存在则不添加
+        let isNew = true;
+        for (let tag of Object.values(this.tags)) {
+          if (tag.name === tagTemp) {
+            isNew = false;
+            this.newTag = '';
+          }
         }
+        if (isNew) {
+          if (this.tags.length >= 5) {
+            this.$message.showMessage({
+              type: 'warning',
+              content: '最多添加5个标签'
+            });
+          } else {
+            let res = await api.addNewTagWhenPost(tagTemp);
+            if (res.success === 1) {
+              this.tags.push({
+                id: res.newId,
+                name: tagTemp
+              });
+              this.newTag = '';
+            }
+          }
+        }
+      } else if (this.newTag) {
+        this.$refs.searchTagList.style.left = (this.$refs.tagList.offsetWidth + 7) + 'px';
+        let res = await api.searchTagByName(this.newTag);
+        if (res.success === 1) {
+          this.searchTags = res.tags;
+        }
+      } else {
+        this.searchTags = [];
       }
     }
   },
@@ -156,6 +192,53 @@ export default {
     },
     deleteTag: function (index) {
       this.tags.splice(index, 1);
+    },
+    selectTag: function (tag) {
+      // 先判断当前标签是否已存在，已存在则不添加
+      let isNew = true;
+      for (let tagTemp of Object.values(this.tags)) {
+        if (tagTemp.name === tag.name) {
+          isNew = false;
+        }
+      }
+      if (isNew) {
+        if (this.tags.length >= 5) {
+          this.$message.showMessage({
+            type: 'warning',
+            content: '最多添加5个标签'
+          });
+        } else {
+          this.tags.push(tag);
+        }
+      }
+      this.newTag = '';
+      this.searchTags = [];
+    },
+    addCategory: function () {
+      this.$msgBox.showMsgBox({
+        title: '添加分类',
+        content: '请填写分类名称',
+        isShowInput: true
+      }).then(async (val) => {
+        let res = await api.addNewCategory(val);
+        if (res.success === 1) {
+          this.categories.push({
+            id: res.newId,
+            name: val
+          });
+          this.$message.showMessage({
+            type: 'success',
+            content: '添加分类成功'
+          });
+        } else {
+          this.$message.showMessage({
+            type: 'error',
+            content: res.message
+          });
+        }
+      }).catch(() => {
+        console.log('cancel');
+      });
     }
   }
 };
@@ -169,7 +252,14 @@ export default {
   .post-form {
     margin: 0 -1em 5em;
 
+    .no-overflow {
+      overflow: visible;
+    }
+    .tag-list {
+      float: left;
+    }
     .tag-group {
+      position: relative;
       width: 100%;
       border: 1px solid #ccc;
       border-radius: 0.2em;
@@ -178,7 +268,7 @@ export default {
       span {
         position: relative;
         float: left;
-        margin: 0.5em 0 0 0.3em;
+        margin: 0.5em 0 0 1em;
         padding: 0 1.6em 0 0.5em;
         line-height: 2em;
         background: $base-color;
@@ -198,9 +288,29 @@ export default {
       input {
         border: none;
         width: auto;
-        min-width: 15em;
-        padding: 0 0.5em;
+        min-width: 20em;
       }
+      .search-tag-list {
+        position: absolute;
+        top: 100%;
+        left: 1em;
+        margin-top: 0.15em;
+        padding-left: 1em;
+        color: #555;
+        line-height: 2;
+        min-width: 15em;
+        z-index: 999;
+        background: #eff2f7;
+        box-shadow: 0 0.4em 0.8em 0 rgba(0,0,0,0.18);
+      }
+    }
+    .category {
+      width: calc(100% - 9em);
+    }
+    .add-category {
+      position: absolute;
+      top: 0.15em;
+      right: 0.7em;
     }
   }
 

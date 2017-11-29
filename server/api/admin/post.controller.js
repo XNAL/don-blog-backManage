@@ -2,8 +2,8 @@ const moment = require('moment');
 
 exports.getPostById = async(ctx) => {
   let id = ctx.params.id || 0,
-      sql = ` SELECT post.id, post.title, REPLACE(post.content, '<!-- more -->', '') AS content, 
-            post.poster, post.createTime, post.categoryId, category.name AS categoryName, viewTotal 
+      sql = ` SELECT post.id, post.title, post.content, post.poster, post.createTime, 
+            post.categoryId, category.name AS categoryName, viewTotal 
             FROM post LEFT JOIN category ON post.categoryId = category.id 
             WHERE post.id = ${id}`,
       tagSql = ` SELECT tag.id, tag.name from post_tag a LEFT JOIN tag on a.tagId = tag.id 

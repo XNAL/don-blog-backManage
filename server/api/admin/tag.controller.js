@@ -52,6 +52,38 @@ exports.getPostsByTagId = async(ctx) => {
   }
 }
 
+/**
+ * 新增/修改文章时添加新标签
+ * 如果已存在，则直接返回标签的id
+ */ 
+exports.addNewTagWhenPost = async(ctx) => {
+  let name = ctx.params.name || 0;
+  try {
+    let existName = await ctx.execSql(`SELECT * FROM tag WHERE name = ?`, name);
+    if (existName.length > 0) {
+      ctx.body = {
+        success: 1,
+        message: '',
+        newId: existName[0].id
+      };
+      return false;
+    }
+    let results = await ctx.execSql(`INSERT INTO tag SET name = ?`, name);
+    ctx.body = {
+      success: 1,
+      message: '',
+      newId: results.insertId
+    };
+  } catch (error) {
+    console.log(error);
+    ctx.body = {
+      success: 0,
+      message: '添加新标签出错',
+      newId: 0
+    };
+  }
+}
+
 exports.addNewTag = async(ctx) => {
   let name = ctx.params.name || 0;
   try {
@@ -105,7 +137,6 @@ exports.updateTag = async(ctx) => {
   }
 }
 
-
 exports.deleteTag = async(ctx) => {
   let id = ctx.params.id || 0;
   try {
@@ -120,6 +151,23 @@ exports.deleteTag = async(ctx) => {
     ctx.body = {
       success: 0,
       message: '删除标签出错'
+    };
+  }
+}
+
+exports.searchTagByName = async(ctx) => {
+  let name = ctx.params.name;
+  try {
+    let result = await ctx.execSql(`SELECT id, name FROM tag WHERE name like '${name}%'`);
+    ctx.body = {
+      success: 1,
+      tags: result.length > 0 ? result : []
+    };
+  } catch (error) {
+    console.log(error);
+    ctx.body = {
+      success: 0,
+      message: '搜索标签出错'
     };
   }
 }
