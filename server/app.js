@@ -20,7 +20,9 @@ app.use(async(ctx, next) => {
 
 // routes
 fs.readdirSync(path.join(__dirname, 'routes')).forEach(function (file) {
-    if (~file.indexOf('.js')) app.use(require(path.join(__dirname, 'routes', file)).routes());
+    if (~file.indexOf('.js')) {
+      app.use(require(path.join(__dirname, 'routes', file)).routes());
+    }
 });
 
 app.use(function (ctx, next) {
@@ -28,12 +30,12 @@ app.use(function (ctx, next) {
 });
 
 app.on('error', (error, ctx) => {
-  console.log('something error ' + JSON.stringify(ctx.onerror))
+  console.log('something error ' + JSON.stringify(ctx.onerror));
   ctx.redirect('/500.httml');
 })
 
 http.createServer(app.callback())
 	.listen(config.port)
 	.on('listening', function () {
-	  console.log('server listening on: ' + config.port)
+	  console.log('server listening on: ' + config.port);
 	})

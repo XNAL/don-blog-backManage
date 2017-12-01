@@ -24,5 +24,6 @@ module.exports = {
     tempUploads: 'tempUploads',
     uploads: 'uploads',
     port: 9000,
-    tokenSecret: 'test'
+    tokenSecret: 'test',
+    isUpdateAdmin: true
 };

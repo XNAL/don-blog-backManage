@@ -6,6 +6,12 @@ const path = require('path');
 const jwt = require('koa-jwt');
 const config = require('./config');
 const tokenError = require('../middlreware/tokenError');
+const adminAccout =  require('../util/admin-account');
+
+// admin账号通过配置写入到数据库中
+if (config.isUpdateAdmin) {
+  adminAccout.saveAdminAccount();
+}
 
 const app = new Koa();
 
