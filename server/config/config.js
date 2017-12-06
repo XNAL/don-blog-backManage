@@ -25,5 +25,6 @@ module.exports = {
     uploads: 'uploads',
     port: 9000,
     tokenSecret: 'test',
-    isUpdateAdmin: true
+    isUpdateAdmin: true,
+    accessControlAllowOrigin: 'http://localhost:3000'
 };

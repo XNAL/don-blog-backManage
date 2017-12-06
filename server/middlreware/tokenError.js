@@ -33,7 +33,10 @@ module.exports = function () {
         };
       } else {
         err.status = 404;
-        ctx.body = '404';
+        ctx.body = {
+          success: 0,
+          message: '404'
+        };
       }
     }
   }

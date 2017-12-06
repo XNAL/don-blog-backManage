@@ -9,12 +9,12 @@ const path = require('path');
 
 app.use(session({
   store: new Store(config.db.redis),
-  ttl: 2*60*60*1000
+  ttl: 2 * 60 * 60 * 1000
 }));
 
 app.use(async(ctx, next) => {
   ctx.execSql = query;
-  ctx.set('Access-Control-Allow-Origin', 'http://localhost:3000');
+  ctx.set('Access-Control-Allow-Origin', config.accessControlAllowOrigin);
   await next();
 });
 

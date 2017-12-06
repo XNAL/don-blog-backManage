@@ -1,7 +1,7 @@
 <template>
   <transition name="fade">
     <section :class="['message', `message-${types.includes(type) ? type : 'info'}` ]" 
-              v-if="isShowMessage" @mouseover="mouseOver" @mouseleave="mouseLeave">
+              v-show="isShowMessage" @mouseover="mouseOver" @mouseleave="mouseLeave">
       <p class="content">
         <svg class="icon" aria-hidden="true">
           <use :xlink:href="`#icon-${types.includes(type) ? type : 'info'}`"></use>
@@ -20,16 +20,25 @@ export default {
       duration: 2000,
       type: '',
       types: ['success', 'warning', 'info', 'error'],
-      timer: null
+      timer: null,
+      resolve: '',
+      reject: '',
+      promise: '' // 保存promise对象
     };
   },
   methods: {
     showMessage: function () {
       this.isShowMessage = true;
       this.messageTimer();
+      this.promise = new Promise((resolve, reject) => {
+        this.resolve = resolve;
+        this.reject = reject;
+      });
+      console.log(this.isShowMessage);
+      // 返回promise对象
+      return this.promise;
     },
     remove: function () {
-      this.isShowMessage = false;
       setTimeout(() => {
         this.destroy();
       }, 300);
@@ -41,6 +50,8 @@ export default {
     messageTimer: function () {
       if (this.duration > 0) {
         this.timer = setTimeout(() => {
+          this.isShowMessage = false;
+          this.resolve('ok');
           this.remove();
         }, this.duration);
       }

@@ -17,13 +17,23 @@ Message.install = function (Vue, options) {
     showMessage (options) {
       if (!currentMsg) {
         initInstance();
+      } else {
+        return;
       }
       if (typeof options === 'string') {
         currentMsg.content = options;
       } else if (typeof options === 'object') {
         Object.assign(currentMsg, options);
       }
-      return currentMsg.showMessage();
+      return currentMsg.showMessage()
+        .then(val => {
+          currentMsg = null;
+          return Promise.resolve(val);
+        })
+        .catch(err => {
+          currentMsg = null;
+          return Promise.reject(err);
+        });
     }
   };
 };
