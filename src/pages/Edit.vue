@@ -6,12 +6,11 @@
       <div class="form-group col-12">
         <input type="text" class="title" v-model="post.title" placeholder="文章标题">
       </div>
-      <div class="form-group col-12">
-        <select class="category" v-model="post.categoryId" placeholder="文章分类">
-          <option v-for="category in categories" :value="category.id" :key="category.id">
-            {{ category.name }}
-          </option>
-        </select>
+      <div class="form-group col-12 no-overflow">
+        <db-select class="category" 
+                  :selected="post.categoryId"
+                  :options="categories"
+                  @selected-value="changeSelectedCategory"></db-select>
         <button class="btn-default add-category" @click="addCategory">添加分类</button>
       </div>
       <div class="form-group col-12 no-overflow">
@@ -49,12 +48,14 @@ import api from '../fetch/api';
 import Menu from '../components/Menu';
 import Header from '../components/Header';
 import DBMarkdown from '../components/DB-Markdown';
+import DBSelect from '../components/DB-Select';
 
 export default {
   components: {
     'back-menu': Menu,
     'back-header': Header,
-    'db-markdown': DBMarkdown
+    'db-markdown': DBMarkdown,
+    'db-select': DBSelect
   },
   data () {
     return {
@@ -137,6 +138,10 @@ export default {
   methods: {
     syncContent: function (content) {
       this.post.content = content;
+    },
+    changeSelectedCategory: function (catId) {
+      this.post.categoryId = catId;
+      console.log(this.post);
     },
     getPostById: async function (id) {
       let res = await api.getPostById(id);
