@@ -33,6 +33,15 @@ export default {
       showOptions: false
     };
   },
+  watch: {
+    showOptions: function () {
+      if (this.showOptions) {
+        document.body.addEventListener('click', this.hideOptions);
+      } else {
+        document.body.removeEventListener('click', this.hideOptions);
+      }
+    }
+  },
   created () {
     if (this.selected) {
       this.selectedId = this.selected;
@@ -48,6 +57,9 @@ export default {
       this.selectedId = id;
       this.$emit('selected-value', id);
       this.selectedValue = value;
+      this.showOptions = false;
+    },
+    hideOptions: function () {
       this.showOptions = false;
     }
   }

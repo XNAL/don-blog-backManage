@@ -26,8 +26,12 @@
           </div>
           <input type="text" v-model.trim="newTag" ref="inputTag" placeholder="标签，可使用 逗号, 分号; 分割">
           <ul class="search-tag-list" ref="searchTagList" v-show="searchTags.length > 0">
-            <li class="search-tag" v-for="tag in searchTags" :key="tag.id" @click="selectTag(tag)">
-              {{ tag.name }}
+            <li class="search-tag" 
+                v-for="tag in searchTags" 
+                :key="tag.id" 
+                @click="selectTag(tag)"
+                v-html='filterTag(tag.name)'>
+              <!-- {{ tag.name | fliterTag(newTag) }} -->
             </li>
           </ul>
         </div>
@@ -136,6 +140,9 @@ export default {
     }
   },
   methods: {
+    filterTag: function (tag) {
+      return tag.replace(this.newTag, `<strong>${this.newTag}</strong>`);
+    },
     syncContent: function (content) {
       this.post.content = content;
     },
