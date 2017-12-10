@@ -40,15 +40,15 @@ export default {
       } else {
         document.body.removeEventListener('click', this.hideOptions);
       }
-    }
-  },
-  created () {
-    if (this.selected) {
-      this.selectedId = this.selected;
-    }
-    for (let value of Object.values(this.options)) {
-      if (value.id === this.selectedId) {
-        this.selectedValue = value.name;
+    },
+    selected: function () {
+      if (this.selected) {
+        this.selectedId = this.selected;
+      }
+      for (let value of Object.values(this.options)) {
+        if (value.id === this.selectedId) {
+          this.selectedValue = value.name;
+        }
       }
     }
   },

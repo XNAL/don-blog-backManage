@@ -82,14 +82,15 @@ exports.getPost = async(ctx) => {
 exports.getArchive = async(ctx) => {
   let catSql = `  SELECT category.id, category.name, COUNT(post.id) AS count 
                     FROM category LEFT JOIN post ON post.categoryId = category.id 
+                    WHERE post.status = 'PUBLISHED'
                     GROUP BY category.id`,
     	tagSql = `  SELECT tag.id, tag.name, COUNT(post.id) AS count FROM tag 
                     LEFT JOIN post_tag ON tag.id = post_tag.tagId
                     LEFT JOIN post ON post_tag.postId = post.id AND post.status = 'PUBLISHED'
                     GROUP BY tag.id`,
       timeSql = ` SELECT DATE_FORMAT(createTime,'%Y年%m月') AS yearMonth, id, title, 
-                    DATE_FORMAT(createTime,'%Y-%m-%d') AS createTime
-                    FROM post ORDER BY createTime DESC`;
+                    DATE_FORMAT(createTime,'%Y-%m-%d') AS createTime FROM post 
+                    WHERE post.status = 'PUBLISHED' ORDER BY createTime DESC`;
   try {
     let catResults = await ctx.execSql(catSql);
     let tagResults = await ctx.execSql(tagSql);
