@@ -16,6 +16,9 @@ export default {
       'post'
     );
   },
+  signOut () {
+    return async(`${baseUrl}/signOut`);
+  },
   ...apiPost,
   ...apiCategory,
   ...apiTag,

@@ -42,6 +42,14 @@ export default {
       }
     },
     selected: function () {
+      this.initSelected();
+    }
+  },
+  created () {
+    this.initSelected();
+  },
+  methods: {
+    initSelected: function () {
       if (this.selected) {
         this.selectedId = this.selected;
       }
@@ -50,9 +58,7 @@ export default {
           this.selectedValue = value.name;
         }
       }
-    }
-  },
-  methods: {
+    },
     selectValue: function (id, value) {
       this.selectedId = id;
       this.$emit('selected-value', id);

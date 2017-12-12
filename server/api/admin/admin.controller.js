@@ -54,6 +54,14 @@ exports.login = async(ctx) => {
   }
 }
 
+exports.signOut = async(ctx) => {
+  ctx.session.user = null;
+  ctx.body = {
+    success: 1,
+    message: ''
+  };
+}
+
 
 
 

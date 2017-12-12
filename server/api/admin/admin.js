@@ -6,6 +6,7 @@ const tag = require('./tag.controller');
 const laboratory = require('./laboratory.controller');
 
 router.post('/login', admin.login);
+router.get('/signOut', admin.signOut);
 
 router.get('/getPostById/:id', post.getPostById);
 router.post('/addPost', post.addPost);

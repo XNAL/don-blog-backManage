@@ -95,7 +95,7 @@ exports.uploadFile = (ctx) => {
             //上传成功，返回文件的相对路径
             return resolve({
               fields: data,
-              filePath: path.join(config.uploads, dirName, fileName)
+              filePath: path.join(path.sep, config.uploads, dirName, fileName)
             })
         }
       });
