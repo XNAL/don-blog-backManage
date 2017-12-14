@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const helper = require('../../util/helper');
-const config = require('../../config/config');
+const config = require('../../config/environment');
 
 exports.login = async(ctx) => {
   let userName = ctx.request.body.userName || '',

@@ -1,5 +1,5 @@
 const app = require('./config/koa');
-const config = require('./config/config');
+const config = require('./config/environment');
 const query = require('./util/mysql-async');
 const Store = require('./util/redis-store');
 const session = require('koa-session2');

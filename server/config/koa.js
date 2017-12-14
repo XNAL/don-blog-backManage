@@ -4,7 +4,7 @@ const bodyParser = require('koa-bodyparser');
 const resource = require('koa-static');
 const path = require('path');
 const jwt = require('koa-jwt');
-const config = require('./config');
+const config = require('./environment');
 const tokenError = require('../middlreware/tokenError');
 const adminAccout =  require('../util/admin-account');
 

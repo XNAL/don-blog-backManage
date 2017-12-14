@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const config = require('../config/config');
+const config = require('../config/environment');
 const util = require('util');
 const verify = util.promisify(jwt.verify);
 

@@ -2,7 +2,7 @@ const crypto = require('crypto');
 const formidable = require('formidable');
 const fs = require('fs');
 const path = require('path');
-const config = require('../config/config');
+const config = require('../config/environment');
 const moment = require('moment');
 
 /**

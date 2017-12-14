@@ -1,4 +1,4 @@
-var path = require('path');
+const path = require('path');
 
 module.exports = {
 	db: {
@@ -26,5 +26,7 @@ module.exports = {
     port: 9000,
     tokenSecret: 'test',
     isUpdateAdmin: true,
-    accessControlAllowOrigin: 'http://localhost:3000'
+    accessControlAllowOrigin: 'http://localhost:3000',
+    adminName: 'admin',
+    adminPassword: '123456'
 };

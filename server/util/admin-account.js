@@ -1,10 +1,11 @@
 const moment = require('moment');
 const helper = require('./helper');
 const sqlQuery = require('./mysql-async');
+const config = require('../config/environment');
 
 const account = {
-  name: 'admin',
-  password: '1234567'
+  name: config.adminName,
+  password: config.adminPassword
 };
 
 exports.saveAdminAccount = async function () {
