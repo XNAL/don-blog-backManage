@@ -2,6 +2,7 @@
 node_modules/
 dist/
 server/src
+server/config/environment/production.js
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
