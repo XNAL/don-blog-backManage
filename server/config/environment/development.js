@@ -28,5 +28,6 @@ module.exports = {
     isUpdateAdmin: true,
     accessControlAllowOrigin: 'http://localhost:3000',
     adminName: 'admin',
-    adminPassword: '123456'
+    adminPassword: '123456',
+    socketioPath: '/testsocketiopath'
 };
