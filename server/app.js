@@ -2,6 +2,7 @@ const app = require('./config/koa');
 const config = require('./config/environment');
 const query = require('./util/mysql-async');
 const Store = require('./util/redis-store');
+const draftSocket = require('./util/draft-socketio');
 const session = require('koa-session2');
 const http = require('http');
 const fs = require('fs');
@@ -34,8 +35,11 @@ app.on('error', (error, ctx) => {
   ctx.redirect('/500.httml');
 })
 
-http.createServer(app.callback())
+const server = http.createServer(app.callback())
 	.listen(config.port)
 	.on('listening', function () {
 	  console.log('server listening on: ' + config.port);
-	})
+  });
+
+// 初始化websocket
+draftSocket.initSocket(server);

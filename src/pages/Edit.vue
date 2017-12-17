@@ -133,11 +133,23 @@ export default {
       }
     }
   },
+  sockets: {
+    connect: function () {
+      console.log('socket connected');
+    },
+    test: function (val) {
+      console.log('get from socket server.', val);
+    }
+  },
   created () {
     this.getCategories();
     if (this.$route.params.id) {
       this.getPostById(this.$route.params.id);
     }
+    this.$socket.emit('test', {
+      id: 1,
+      name: 'from client'
+    });
   },
   methods: {
     filterTag: function (tag) {

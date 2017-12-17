@@ -32,8 +32,10 @@
     "node-sass": "^4.6.0",
     "sass-loader": "^6.0.6",
     "socket.io": "^2.0.4",
+    "socket.io-client": "^2.0.4",
     "vue": "^2.5.2",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vue-socket.io": "^2.1.1-a"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

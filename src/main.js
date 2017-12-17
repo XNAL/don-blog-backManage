@@ -4,11 +4,17 @@ import Vue from 'vue';
 import App from './App';
 import router from './router';
 import axios from 'axios';
+import VueSocketio from 'vue-socket.io';
+import socketio from 'socket.io-client';
 
 import MessageBox from './components/MessageBox/index';
 import Message from './components/Message/index';
 Vue.use(MessageBox);
 Vue.use(Message);
+
+Vue.use(VueSocketio, socketio('http://localhost:9000', {
+  path: '/testsocketiopath'
+}));
 
 Vue.config.productionTip = false;
 
