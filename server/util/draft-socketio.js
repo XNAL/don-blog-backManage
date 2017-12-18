@@ -27,14 +27,14 @@ exports.initSocket = function (server) {
     });
 
     // 进入新增文章页面，获取已保存的草稿（可以为空）
-    socket.on('getDraftPost', function () {
-      let data = draftRedis.get(DRAFTREDISKEY);
+    socket.on('getDraftPost', async function () {
+      let data = await draftRedis.get(DRAFTREDISKEY);
       socket.emit('getDraftPost', data);
     });
 
     // 实时保存文章内容
-    socket.on('saveDraftPost', function (data) {
-      draftRedis.set(DRAFTREDISKEY, data);
+    socket.on('saveDraftPost', async function (data) {
+      let res = draftRedis.set(DRAFTREDISKEY, JSON.stringify(data));
       socket.emit('saveDraftPost', 'success');
     });
 

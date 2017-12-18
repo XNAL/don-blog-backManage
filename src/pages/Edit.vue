@@ -31,7 +31,6 @@
                 :key="tag.id" 
                 @click="selectTag(tag)"
                 v-html='filterTag(tag.name)'>
-              <!-- {{ tag.name | fliterTag(newTag) }} -->
             </li>
           </ul>
         </div>
@@ -131,25 +130,40 @@ export default {
       } else {
         this.searchTags = [];
       }
+    },
+    post: {
+      handler: function (val, oldVal) {
+        let newPost = Object.assign({}, this.post);
+        newPost.tags = this.tags;
+        this.$socket.emit('saveDraftPost', newPost);
+      },
+      deep: true
+    },
+    tags: function (val, oldVal) {
+      let newPost = Object.assign({}, this.post);
+      newPost.tags = this.tags;
+      this.$socket.emit('saveDraftPost', newPost);
     }
   },
   sockets: {
     connect: function () {
       console.log('socket connected');
     },
-    test: function (val) {
-      console.log('get from socket server.', val);
+    getDraftPost: function (val) {
+      if (val) {
+        let serverPost = JSON.parse(val);
+        Object.assign(this.post, JSON.parse(val));
+        this.tags = serverPost.tags;
+      }
     }
   },
   created () {
     this.getCategories();
     if (this.$route.params.id) {
       this.getPostById(this.$route.params.id);
+    } else {
+      this.getDraftPost();
     }
-    this.$socket.emit('test', {
-      id: 1,
-      name: 'from client'
-    });
   },
   methods: {
     filterTag: function (tag) {
@@ -263,6 +277,9 @@ export default {
       }).catch(() => {
         console.log('cancel');
       });
+    },
+    getDraftPost: function () {
+      this.$socket.emit('getDraftPost');
     }
   }
 };

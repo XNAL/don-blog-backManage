@@ -15,7 +15,7 @@ class DraftRedis {
       // Use redis set EX to automatically drop expired sessions
       await this.redis.set(key, JSON.stringify(data), 'EX', maxAge / 1000);
     } catch (e) {}
-    return sid;
+    return 'success';
   }
 
   async destroy (key) {
