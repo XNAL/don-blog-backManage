@@ -133,15 +133,13 @@ export default {
     },
     post: {
       handler: function (val, oldVal) {
-        let newPost = Object.assign({}, this.post);
-        newPost.tags = this.tags;
+        let newPost = this.createSavePost();
         this.$socket.emit('saveDraftPost', newPost);
       },
       deep: true
     },
     tags: function (val, oldVal) {
-      let newPost = Object.assign({}, this.post);
-      newPost.tags = this.tags;
+      let newPost = this.createSavePost();
       this.$socket.emit('saveDraftPost', newPost);
     }
   },
@@ -213,8 +211,7 @@ export default {
     },
     draftPost: async function () {
       this.post.status = 'DRAFT';
-      let newPost = Object.assign({}, this.post);
-      newPost.tags = this.tags;
+      let newPost = this.createSavePost();
       let res = null;
       if (this.$route.params.id) {
         res = await api.updatePost(this.$route.params.id, newPost);
@@ -280,6 +277,11 @@ export default {
     },
     getDraftPost: function () {
       this.$socket.emit('getDraftPost');
+    },
+    createSavePost: function () {
+      let savePost = Object.assign({}, this.post);
+      savePost.tags = this.tags;
+      return savePost;
     }
   }
 };

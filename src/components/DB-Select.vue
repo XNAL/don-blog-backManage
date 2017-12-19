@@ -43,6 +43,9 @@ export default {
     },
     selected: function () {
       this.initSelected();
+    },
+    options: function () {
+      this.initSelected();
     }
   },
   created () {
