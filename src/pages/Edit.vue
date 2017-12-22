@@ -74,7 +74,9 @@ export default {
       }],
       tags: [],
       newTag: '',
-      searchTags: []
+      searchTags: [],
+      isFirtUpdatePostChange: false,  // 编辑时第一次获取到post对象时不使用websocket保存
+      isFirtUpdateTagsChange: false   // 编辑时第一次获取到tags对象时不使用websocket保存
     };
   },
   watch: {
@@ -133,14 +135,22 @@ export default {
     },
     post: {
       handler: function (val, oldVal) {
-        let newPost = this.createSavePost();
-        this.$socket.emit('saveDraftPost', newPost);
+        if (this.isFirtUpdatePostChange) {
+          this.isFirtUpdatePostChange = false;
+        } else {
+          let newPost = this.createSavePost();
+          this.$socket.emit('saveDraftPost', newPost);
+        }
       },
       deep: true
     },
     tags: function (val, oldVal) {
-      let newPost = this.createSavePost();
-      this.$socket.emit('saveDraftPost', newPost);
+      if (this.isFirtUpdateTagsChange) {
+        this.isFirtUpdateTagsChange = false;
+      } else {
+        let newPost = this.createSavePost();
+        this.$socket.emit('saveDraftPost', newPost);
+      }
     }
   },
   sockets: {
@@ -177,6 +187,8 @@ export default {
     getPostById: async function (id) {
       let res = await api.getPostById(id);
       if (res.success === 1) {
+        this.isFirtUpdatePostChange = true;
+        this.isFirtUpdateTagsChange = true;
         this.post = res.post;
         this.tags = res.tags;
       }
