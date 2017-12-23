@@ -159,9 +159,9 @@ export default {
     },
     getDraftPost: function (val) {
       if (val) {
-        let serverPost = JSON.parse(val);
-        Object.assign(this.post, JSON.parse(val));
-        this.tags = serverPost.tags;
+        // let serverPost = JSON.parse(val);
+        Object.assign(this.post, val);
+        this.tags = val.tags;
       }
     }
   },

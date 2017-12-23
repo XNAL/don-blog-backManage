@@ -1,8 +1,9 @@
 const SocketIO = require('socket.io');
 const config =  require('../config/environment');
 const DraftRedis =  require('./draft-redis');
+const redisMysql = require('./redis-mysql');
 
-const DRAFTREDISKEY = 'DRAFTPSOTKEY';
+const draftPostRedisKey = config.draftPostRedisKey;
 
 exports.initSocket = function (server) {
   console.log('init websocket');
@@ -16,32 +17,34 @@ exports.initSocket = function (server) {
   socketHandle.on('connection', function (socket) {
     console.log('socket connected');
 
-    socket.on('test', function (val) {
-      console.log('test from client', val);
-      socket.emit('test', 'from server');
-    });
-
     // 离开编辑文章页面
     socket.on('disconnect', function () {
-      console.info('[%s] DISCONNECTED', socket.address);
+      console.info('[%s] DISCONNECTED', socket.sid);
     });
 
     // 进入新增文章页面，获取已保存的草稿（可以为空）
     socket.on('getDraftPost', async function () {
-      let data = await draftRedis.get(DRAFTREDISKEY);
-      socket.emit('getDraftPost', data);
+      let data = await draftRedis.get(draftPostRedisKey);
+      if (!data) {
+        data = await redisMysql.getDraftPostFromMysql();
+        socket.emit('getDraftPost', data);
+        await draftRedis.set(draftPostRedisKey, data);
+      } else {
+        socket.emit('getDraftPost', data);
+      }
     });
 
     // 实时保存文章内容
     socket.on('saveDraftPost', async function (data) {
-      let res = draftRedis.set(DRAFTREDISKEY, JSON.stringify(data));
-      socket.emit('saveDraftPost', 'success');
+      let res = await draftRedis.set(draftPostRedisKey, JSON.stringify(data));
+      socket.emit('saveDraftPost', res);
     });
 
     // 保存后清空已保存的文章草稿
-    socket.on('clearDraftPost', function () {
-      draftRedis.destroy(DRAFTREDISKEY);
-      socket.emit('clearDraftPost', 'success');
+    socket.on('clearDraftPost', async function () {
+      await draftRedis.destroy(draftPostRedisKey);
+      await redisMysql.clearDraftPostOfMysql();
+      socket.emit('clearDraftPost', true);
     });
   });
 };
