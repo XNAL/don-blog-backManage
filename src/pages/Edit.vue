@@ -161,7 +161,7 @@ export default {
       if (val) {
         // let serverPost = JSON.parse(val);
         Object.assign(this.post, val);
-        this.tags = val.tags;
+        this.tags = val.tags || [];
       }
     }
   },
@@ -215,6 +215,7 @@ export default {
         res = await api.addPost(newPost);
       }
       if (res.success === 1) {
+        this.$socket.emit('clearDraftPost');
         this.$message.showMessage({
           type: 'success',
           content: '文章发布成功'
@@ -231,6 +232,7 @@ export default {
         res = await api.addPost(newPost);
       }
       if (res.success === 1) {
+        this.$socket.emit('clearDraftPost');
         this.$message.showMessage({
           type: 'success',
           content: '文章保存草稿成功'
@@ -291,8 +293,15 @@ export default {
       this.$socket.emit('getDraftPost');
     },
     createSavePost: function () {
-      let savePost = Object.assign({}, this.post);
-      savePost.tags = this.tags;
+      let savePost = {
+        id: this.post.id || 0,
+        title: this.post.title,
+        content: this.post.content,
+        categoryId: this.post.categoryId,
+        status: this.post.status,
+        poster: this.post.poster,
+        tags: this.tags
+      };
       return savePost;
     }
   }

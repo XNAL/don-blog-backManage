@@ -36,7 +36,7 @@ exports.initSocket = function (server) {
 
     // 实时保存文章内容
     socket.on('saveDraftPost', async function (data) {
-      let res = await draftRedis.set(draftPostRedisKey, JSON.stringify(data));
+      let res = await draftRedis.set(draftPostRedisKey, data);
       socket.emit('saveDraftPost', res);
     });
 

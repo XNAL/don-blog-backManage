@@ -12,8 +12,8 @@ exports.redisToMysqlTask = function () {
 
   // 每天凌晨3点执行任务
   let rule = new schedule.RecurrenceRule();
-  rule.hour = 18;
-  rule.minute = 30;
+  rule.hour = 3;
+  rule.minute = 0;
 
   schedule.scheduleJob(rule, async function () {
     console.log('定时任务开始执行!', moment().format('YYYY-MM-DD HH:mm:ss'));
