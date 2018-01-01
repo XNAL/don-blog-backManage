@@ -2,7 +2,7 @@
   <section class="post-list right-container">
     <back-menu></back-menu>
     <back-header></back-header>    
-    <post-table :post-list="postList"></post-table>
+    <post-table :post-list="postList" @delete-post='changePostTotal'></post-table>
     <pagination :page-size="pageSize" 
                 :total="total" 
                 :current-page="page" 
@@ -52,6 +52,10 @@ export default {
     },
     changePage: function (newPage) {
       this.page = newPage;
+      this.getPostList();
+    },
+    changePostTotal: function () {
+      this.getPostTotal();
       this.getPostList();
     }
   }

@@ -26,6 +26,9 @@ export default {
   publishPost (id) {
     return async(`${baseUrl}/publishPost/${id}`, {}, 'put');
   },
+  deletePost (id) {
+    return async(`${baseUrl}/deletePost/${id}`, {}, 'delete');
+  },
   getPostsByCatId (id, page = 1, pageNum = 10) {
     return async(`${baseUrl}/getPostsByCatId/${id}`, {
       page: page,

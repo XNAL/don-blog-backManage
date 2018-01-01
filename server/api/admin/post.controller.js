@@ -188,3 +188,20 @@ exports.publishPost = async(ctx) => {
     };
   }
 }
+
+exports.deletePost = async(ctx) => {
+  let id = ctx.params.id || 0;
+  try {
+    let results = await ctx.execSql(`DELETE FROM post WHERE id = ?`, id);
+    ctx.body = {
+      success: 1,
+      message: ''
+    };
+  } catch (error) {
+    console.log(error);
+    ctx.body = {
+      success: 0,
+      message: '文章删除出错'
+    };
+  }
+}

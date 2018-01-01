@@ -26,6 +26,7 @@
                 <button class="btn-default btn-offline" @click="offlinePost(post.id, index)" 
                         v-if="post.status === 'PUBLISHED'">下线</button>
                 <button class="btn-default btn-publish" @click="publishPost(post.id, index)" v-else>发布</button>
+                <button class="btn-default btn-delete" @click="deletePost(post.id, index)">删除</button>
               </td>
             </tr>
           </template>
@@ -111,6 +112,29 @@ export default {
       }).catch(() => {
         return false;
       });
+    },
+    deletePost: async function (postId, index) {
+      this.$msgBox.showMsgBox({
+        title: '确认删除',
+        content: '删除后无法恢复，确认删除该篇文章？'
+      }).then(async () => {
+        let res = await api.deletePost(postId);
+        if (res.success === 1) {
+          this.postList.splice(index, 1);
+          this.$emit('delete-post');
+          this.$message.showMessage({
+            type: 'success',
+            content: '删除文章成功'
+          });
+        } else {
+          this.$message.showMessage({
+            type: 'error',
+            content: res.message
+          });
+        }
+      }).catch(() => {
+        return false;
+      });
     }
   }
 };
@@ -138,21 +162,28 @@ export default {
       }
       button {
         padding: 0.4em 1em;
+        margin-left: 1em;
 
         &.btn-offline {
-          margin-left: 1em;
-          background-color: #fa5555;
+          background-color: #eb9e05;
           color: #fff;
-          border-color: #fa5555;
+          border-color: #eb9e05;
           &:hover {
             opacity: .8;
           }
         }
         &.btn-publish {
-          margin-left: 1em;
           background-color: $base-color;
           color: #fff;
           border-color: $base-color;
+          &:hover {
+            opacity: .8;
+          }
+        }
+        &.btn-delete {
+          background-color: #fa5555;
+          border-color: #fa5555;
+          color: #fff;
           &:hover {
             opacity: .8;
           }
