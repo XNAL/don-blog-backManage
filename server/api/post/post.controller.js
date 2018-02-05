@@ -1,17 +1,24 @@
 exports.getPostList = async(ctx) => {
   let page = ctx.query.page || 1,
-      pageNum = ctx.query.pageNum || 10;
+    pageNum = ctx.query.pageNum || 10;
   let pageIndex = (page - 1) * pageNum < 0 ? 0 : (page - 1) * pageNum;
-  let sql = ` SELECT post.id, post.title, SUBSTRING_INDEX(post.content, '<!-- more -->', 1) AS content, 
+  let sql = ` SELECT post.id, post.title, post.content, 
                 post.poster, post.createTime, post.categoryId, category.name AS categoryName 
                 FROM post LEFT JOIN category ON post.categoryId = category.id WHERE post.status = 'PUBLISHED'
                 ORDER BY post.createTime DESC LIMIT ${pageIndex}, ${pageNum}`;
   try {
     let results = await ctx.execSql(sql);
+    let summaryArr = [];
+    results.forEach(element => {
+      let tempPost = element;
+      let contentArr = element.content.split('\n');
+      tempPost.content = contentArr.slice(0, 10).join('\n');
+      summaryArr.push(tempPost);
+    });
     ctx.body = {
       success: 1,
       message: '',
-      posts: results
+      posts: summaryArr
     };
   } catch (error) {
     console.log(error);
@@ -21,11 +28,11 @@ exports.getPostList = async(ctx) => {
       posts: null
     };
   }
-}
+};
 
 exports.getPost = async(ctx) => {
   let id = ctx.params.id || 0,
-    	sql = ` SELECT post.id, post.title, REPLACE(post.content, '<!-- more -->', '') AS content, 
+    	sql = ` SELECT post.id, post.title, post.content, 
               post.poster, post.createTime, post.categoryId, category.name AS categoryName, viewTotal 
               FROM post LEFT JOIN category ON post.categoryId = category.id 
               WHERE post.status = 'PUBLISHED' AND post.id = ${id}`,
@@ -36,7 +43,7 @@ exports.getPost = async(ctx) => {
                       UNION
                       SELECT 1 AS sort, id, title FROM (SELECT * FROM post WHERE id < ${id} 
                         AND status = 'PUBLISHED' ORDER BY id DESC LIMIT 0, 1) AS tab`,
-      updateSql = `UPDATE post SET viewTotal = ? WHERE id = ?`;
+    updateSql = `UPDATE post SET viewTotal = ? WHERE id = ?`;
   try {
     let results = await ctx.execSql(sql);
     if (results.length > 0) {
@@ -77,7 +84,7 @@ exports.getPost = async(ctx) => {
       message: '查询数据出错'
     };
   }
-}
+};
 
 exports.getArchive = async(ctx) => {
   let catSql = `  SELECT category.id, category.name, COUNT(post.id) AS count 
@@ -88,7 +95,7 @@ exports.getArchive = async(ctx) => {
                     LEFT JOIN post_tag ON tag.id = post_tag.tagId
                     LEFT JOIN post ON post_tag.postId = post.id AND post.status = 'PUBLISHED'
                     GROUP BY tag.id`,
-      timeSql = ` SELECT DATE_FORMAT(createTime,'%Y年%m月') AS yearMonth, id, title, 
+    timeSql = ` SELECT DATE_FORMAT(createTime,'%Y年%m月') AS yearMonth, id, title, 
                     DATE_FORMAT(createTime,'%Y-%m-%d') AS createTime FROM post 
                     WHERE post.status = 'PUBLISHED' ORDER BY createTime DESC`;
   try {
@@ -96,8 +103,8 @@ exports.getArchive = async(ctx) => {
     let tagResults = await ctx.execSql(tagSql);
     let timeResults = await ctx.execSql(timeSql);
     let timePosts = new Map();
-    for(let post of Object.values(timeResults)) {
-      if(timePosts.has(post.yearMonth)) {
+    for (let post of Object.values(timeResults)) {
+      if (timePosts.has(post.yearMonth)) {
         let tempArray = timePosts.get(post.yearMonth);
         tempArray.push({
           id: post.id,
@@ -119,7 +126,7 @@ exports.getArchive = async(ctx) => {
       message: '',
       categories: catResults.length > 0 ? catResults : [],
       tags: tagResults.length > 0 ? tagResults : [],
-      times: timePosts.size > 0 ? [...timePosts]: []
+      times: timePosts.size > 0 ? [...timePosts] : []
     };
   } catch (error) {
     console.log(error);
@@ -128,14 +135,14 @@ exports.getArchive = async(ctx) => {
       message: '查询数据出错'
     };
   }
-}
+};
 
-exports.getPostsByCatId = async(ctx) => {  
+exports.getPostsByCatId = async(ctx) => {
   let id = ctx.params.id || 0,
-      page = ctx.query.page || 1,
-      pageNum = ctx.query.pageNum || 10,
-      pageIndex = (page - 1) * pageNum < 0 ? 0 : (page - 1) * pageNum,
-      sql = ` SELECT post.id, post.title, SUBSTRING_INDEX(post.content, '<!-- more -->', 1) AS content, 
+    page = ctx.query.page || 1,
+    pageNum = ctx.query.pageNum || 10,
+    pageIndex = (page - 1) * pageNum < 0 ? 0 : (page - 1) * pageNum,
+    sql = ` SELECT post.id, post.title, post.content, 
               post.poster, post.createTime, post.categoryId, category.name AS categoryName 
               FROM post LEFT JOIN category ON post.categoryId = category.id 
               WHERE post.status = 'PUBLISHED' AND post.categoryId = ${id}
@@ -143,11 +150,18 @@ exports.getPostsByCatId = async(ctx) => {
   try {
     let category = await ctx.execSql(`SELECT name FROM category WHERE id = ${id}`);
     let results = await ctx.execSql(sql);
+    let summaryArr = [];
+    results.forEach(element => {
+      let tempPost = element;
+      let contentArr = element.content.split('\n');
+      tempPost.content = contentArr.slice(0, 10).join('\n');
+      summaryArr.push(tempPost);
+    });
     ctx.body = {
       success: 1,
       message: '',
       name: category.length > 0 ? category[0].name : '',
-      posts: results
+      posts: summaryArr
     };
   } catch (error) {
     console.log(error);
@@ -157,14 +171,14 @@ exports.getPostsByCatId = async(ctx) => {
       posts: null
     };
   }
-}
+};
 
-exports.getPostsByTagId = async(ctx) => {  
+exports.getPostsByTagId = async(ctx) => {
   let id = ctx.params.id || 0,
-      page = ctx.query.page || 1,
-      pageNum = ctx.query.pageNum || 10,
-      pageIndex = (page - 1) * pageNum < 0 ? 0 : (page - 1) * pageNum,
-      sql = ` SELECT post.id, post.title, SUBSTRING_INDEX(post.content, '<!-- more -->', 1) AS content, 
+    page = ctx.query.page || 1,
+    pageNum = ctx.query.pageNum || 10,
+    pageIndex = (page - 1) * pageNum < 0 ? 0 : (page - 1) * pageNum,
+    sql = ` SELECT post.id, post.title, post.content, 
               post.poster, post.createTime, post.categoryId, category.name AS categoryName 
               FROM post LEFT JOIN category ON post.categoryId = category.id 
               LEFT JOIN post_tag ON post.id = post_tag.postId
@@ -173,11 +187,18 @@ exports.getPostsByTagId = async(ctx) => {
   try {
     let tag = await ctx.execSql(`SELECT name FROM tag WHERE id = ${id}`);
     let results = await ctx.execSql(sql);
+    let summaryArr = [];
+    results.forEach(element => {
+      let tempPost = element;
+      let contentArr = element.content.split('\n');
+      tempPost.content = contentArr.slice(0, 10).join('\n');
+      summaryArr.push(tempPost);
+    });
     ctx.body = {
       success: 1,
       message: '',
       name: tag.length > 0 ? tag[0].name : '',
-      posts: results
+      posts: summaryArr
     };
   } catch (error) {
     console.log(error);
@@ -187,15 +208,15 @@ exports.getPostsByTagId = async(ctx) => {
       posts: null
     };
   }
-}
+};
 
 exports.getPostsByKeyword = async(ctx) => {
   let keyword = ctx.params.keyword || '',
-      page = ctx.query.page || 1,
-      pageNum = ctx.query.pageNum || 10,
-      pageIndex = (page - 1) * pageNum < 0 ? 0 : (page - 1) * pageNum,
-      sql = ` SELECT id, title, content, poster, createTime, categoryId, categoryName FROM (
-                SELECT post.id, post.title, SUBSTRING_INDEX(post.content, '<!-- more -->', 1) AS content, 
+    page = ctx.query.page || 1,
+    pageNum = ctx.query.pageNum || 10,
+    pageIndex = (page - 1) * pageNum < 0 ? 0 : (page - 1) * pageNum,
+    sql = ` SELECT id, title, content, poster, createTime, categoryId, categoryName FROM (
+                SELECT post.id, post.title, post.content, 
                 post.poster, post.createTime, post.categoryId, category.name AS categoryName 
                 FROM post LEFT JOIN category ON post.categoryId = category.id 
                 LEFT JOIN post_tag ON post.id = post_tag.postId
@@ -206,10 +227,17 @@ exports.getPostsByKeyword = async(ctx) => {
               ORDER BY createTime DESC LIMIT ${pageIndex}, ${pageNum}`;
   try {
     let results = await ctx.execSql(sql);
+    let summaryArr = [];
+    results.forEach(element => {
+      let tempPost = element;
+      let contentArr = element.content.split('\n');
+      tempPost.content = contentArr.slice(0, 10).join('\n');
+      summaryArr.push(tempPost);
+    });
     ctx.body = {
       success: 1,
       message: '',
-      posts: results
+      posts: summaryArr
     };
   } catch (error) {
     console.log(error);
@@ -219,7 +247,7 @@ exports.getPostsByKeyword = async(ctx) => {
       posts: null
     };
   }
-}
+};
 
 exports.getLaboratory = async(ctx) => {
   try {
@@ -237,4 +265,4 @@ exports.getLaboratory = async(ctx) => {
       posts: null
     };
   }
-}
+};
