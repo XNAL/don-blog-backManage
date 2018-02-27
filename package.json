@@ -29,6 +29,7 @@
     "marked": "^0.3.6",
     "moment": "^2.19.1",
     "mysql": "^2.15.0",
+    "node-fetch": "^2.0.0",
     "node-sass": "^4.6.0",
     "node-schedule": "^1.2.5",
     "sass-loader": "^6.0.6",
