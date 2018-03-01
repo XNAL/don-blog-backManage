@@ -2,6 +2,7 @@ const config = require('../../config/environment');
 const sqlQuery = require('../../util/mysql-async');
 const fetch = require('node-fetch');
 const moment = require('moment');
+const jwt = require('jsonwebtoken');
 
 exports.githubOAuth = async(ctx) => {
   const code = ctx.query.code;
@@ -33,9 +34,11 @@ exports.githubOAuth = async(ctx) => {
           return res.json();
         })
         .then(async(res) => {
-          let selectGuest = await sqlQuery(`SELECT * FROM user WHERE role='ADMIN' AND userName=?`, res.login);
+          let userId = 0;
+          let selectGuest = await sqlQuery(`SELECT * FROM user WHERE role = 'GUEST' AND userName = ?`, [res.login]);
           if (selectGuest.length > 0) {
-            await sqlQuery(`UPDATE user SET avatar = ?, email = ? WHERE id = ?`, [res.avatar_url, res.email, selectGuest[0].id]);
+            userId = selectGuest[0].id;
+            await sqlQuery(`UPDATE user SET avatar = ?, email = ? WHERE id = ?`, [res.avatar_url, res.email, userId]);
           } else {
             let newGuest = {
 							userName: res.login,
@@ -44,12 +47,42 @@ exports.githubOAuth = async(ctx) => {
 							role: 'GUEST',
 							createTime: moment().format('YYYY-MM-DD HH:mm:ss')
 						};
-            await sqlQuery(`INSERT INTO user SET ?`, newGuest);
+            let insertGuest = await sqlQuery(`INSERT INTO user SET ?`, newGuest);
+            if (insertGuest.affectedRows > 0) {
+              userId = insertGuest.insertId;
+            }
           }
-          ctx.body = res;
+          if (userId > 0) {
+            ctx.session.user = res.login;
+            // 用户token
+            const userToken = {
+              name: res.login,
+              id: userId
+            };
+            // 签发token
+            const token = jwt.sign(userToken, config.tokenSecret, { expiresIn: '2h' });
+            ctx.body = {
+              success: 1,
+              token: token,
+							userName: res.login,
+							avatar: res.avatar_url,
+              message: ''
+            };
+          } else {
+            ctx.body = {
+              success: 0,
+              token: '',
+              message: 'GitHub授权登录失败'
+            };
+          }
         });
   })
   .catch(e => {
     console.log(e);
+    ctx.body = {
+      success: 0,
+      token: '',
+      message: 'GitHub授权登录失败'
+    };
   });
 };
