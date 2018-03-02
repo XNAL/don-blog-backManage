@@ -1,10 +1,26 @@
 const moment = require('moment');
+const jwt = require('jsonwebtoken');
+const config = require('../../config/environment');
+const util = require('util');
+const verify = util.promisify(jwt.verify);
 
 exports.addComment = async(ctx) => {
-  let commentData = ctx.request.body;
-  commentData.createTime = moment().format('YYYY-MM-DD HH:mm:ss');
+  let commentData = ctx.request.body.comment;
+  commentData.createdTime = moment().format('YYYY-MM-DD HH:mm:ss');
   try {
-    let insert = await ctx.execSql('INSERT INTO comment SET ?', commentData);
+    // 解密payload，获取用户名和ID
+    let payload = await verify(ctx.request.body.token.split(' ')[1], config.tokenSecret);
+    commentData.userId = payload.id;
+  } catch (error) {
+    console.log(error);
+    ctx.body = {
+      success: -1,
+      message: '用户登录信息已过期，请重新登录'
+    };
+    return;
+  }
+  try {
+    let insert = await ctx.execSql('INSERT INTO comments SET ?', commentData);
     if (insert.affectedRows > 0) {
       ctx.body = {
         success: 1,

@@ -20,6 +20,12 @@ module.exports = {
       }
     }
   },
+  oAuth: {
+    github: {
+      client_id: '6625cb27769b1bc52415',
+      client_secret: '5ead47391fd5b132957bc4bf84400d5cacd1e748'
+    }
+  },
   root: path.normalize(__dirname + '/..'),
   appPath: 'src',
   tempUploads: 'tempUploads',
