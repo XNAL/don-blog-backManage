@@ -20,6 +20,9 @@ node server/app.js
 
 // 本地运行需另开一个终端框口并执行以下命令，然后访问`http://localhost:8080/`
 npm run dev
+
+测试账号：admin 
+测试密码：123456
 ```
 
 
