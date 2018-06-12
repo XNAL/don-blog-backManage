@@ -3,7 +3,6 @@ const path = require('path');
 module.exports = {
   db: {
     mysql: {
-      // host: '47.52.225.217',
       host: '127.0.0.1',
       user: 'root',
       password: '123456',
