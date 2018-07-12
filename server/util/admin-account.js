@@ -17,7 +17,7 @@ exports.saveAdminAccount = async function () {
     if (selectAdmin.length > 0) {
       let id = selectAdmin[0].id;
       console.log('id:', id);
-      await sqlQuery(`UPDATE user SET hashedPassword = ? WHERE id = ?`, [hashedPassword, id]);
+      await sqlQuery(`UPDATE user SET hashedPassword = ?, salt = ? WHERE id = ?`, [hashedPassword, salt, id]);
     } else {
       let newAdmin = {
         userName: account.name,
