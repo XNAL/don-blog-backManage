@@ -76,7 +76,8 @@ export default {
       newTag: '',
       searchTags: [],
       isFirtUpdatePostChange: false,  // 编辑时第一次获取到post对象时不使用websocket保存
-      isFirtUpdateTagsChange: false   // 编辑时第一次获取到tags对象时不使用websocket保存
+      isFirtUpdateTagsChange: false,  // 编辑时第一次获取到tags对象时不使用websocket保存
+      isLoading: false
     };
   },
   watch: {
@@ -205,6 +206,10 @@ export default {
       }
     },
     publishPost: async function () {
+      if (this.isLoading) {
+        return;
+      }
+      this.isLoading = true;
       this.post.status = 'PUBLISHED';
       let newPost = Object.assign({}, this.post);
       newPost.tags = this.tags;
@@ -220,9 +225,15 @@ export default {
           type: 'success',
           content: '文章发布成功'
         });
+        this.$router.push({ path: '/postlist' });
       }
+      this.isLoading = false;
     },
     draftPost: async function () {
+      if (this.isLoading) {
+        return;
+      }
+      this.isLoading = true;
       this.post.status = 'DRAFT';
       let newPost = this.createSavePost();
       let res = null;
@@ -237,7 +248,9 @@ export default {
           type: 'success',
           content: '文章保存草稿成功'
         });
+        this.$router.push({ path: '/postlist' });
       }
+      this.isLoading = false;
     },
     deleteTag: function (index) {
       this.tags.splice(index, 1);
