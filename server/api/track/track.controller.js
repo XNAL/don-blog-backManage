@@ -4,7 +4,6 @@ const config = require('../../config/environment');
 
 exports.addEventTrack = async(ctx) => {
   let ip = ctx.request.ip.replace('::ffff:', '');
-  ip = '124.90.43.130';
   let address = await fetch(config.aliCloudApi + ip, {
     method: 'GET',
     headers: {
